@@ -50,7 +50,11 @@ const VibePuneMap = (() => {
   const OSM_HOT        = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
   const OSM_HOT_ATTR   = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors, Tiles &copy; <a href="https://www.hotosm.org/" target="_blank">HOT</a>';
 
-  // Dark Mode: Esri World Dark Gray Canvas (High contrast, modern, zero watermarks)
+  // Dark Mode: CartoDB Dark Matter (High detail road and building network, supports zoom up to 20 without missing tile errors)
+  const CARTO_DARK     = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+  const CARTO_DARK_ATTR= '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a>';
+
+  // Fallback Esri Dark (max native zoom 16)
   const ESRI_DARK      = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
   const ESRI_DARK_ATTR = '&copy; <a href="https://www.esri.com/" target="_blank">Esri</a>, HERE, Garmin, &copy; OpenStreetMap contributors';
 
@@ -101,11 +105,12 @@ const VibePuneMap = (() => {
     _map.zoomControl.setPosition('bottomright');
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const initialTileUrl  = isDark ? ESRI_DARK : OSM_HOT;
-    const initialAttr     = isDark ? ESRI_DARK_ATTR : OSM_HOT_ATTR;
+    const initialTileUrl  = isDark ? CARTO_DARK : OSM_HOT;
+    const initialAttr     = isDark ? CARTO_DARK_ATTR : OSM_HOT_ATTR;
 
     _tileLayer = L.tileLayer(initialTileUrl, {
       attribution: initialAttr,
+      subdomains: 'abcd',
       maxZoom: cfg.maxZoom,
       crossOrigin: true,
     }).addTo(_map);
@@ -267,10 +272,11 @@ const VibePuneMap = (() => {
 
     // Layer Control
     const baseMaps = {
-      "OpenStreetMap (Vibrant HOT)": _tileLayer,
+      "CartoDB Dark Matter (High Detail)": _tileLayer,
+      "OpenStreetMap (Vibrant HOT)": L.tileLayer(OSM_HOT, { attribution: OSM_HOT_ATTR, maxZoom: cfg.maxZoom }),
       "OpenStreetMap (Standard)": L.tileLayer(OSM_STANDARD, { attribution: OSM_ATTR, maxZoom: cfg.maxZoom }),
-      "Esri Clean Light": L.tileLayer(ESRI_LIGHT, { attribution: ESRI_LIGHT_ATTR, maxZoom: 19 }),
-      "Esri Dark Canvas": L.tileLayer(ESRI_DARK, { attribution: ESRI_DARK_ATTR, maxZoom: 19 })
+      "Esri Clean Light": L.tileLayer(ESRI_LIGHT, { attribution: ESRI_LIGHT_ATTR, maxZoom: 19, maxNativeZoom: 16 }),
+      "Esri Dark Canvas": L.tileLayer(ESRI_DARK, { attribution: ESRI_DARK_ATTR, maxZoom: 19, maxNativeZoom: 16 })
     };
     const overlayMaps = {
       "Interactive POIs": _poiLayerGroup,
@@ -695,10 +701,11 @@ const VibePuneMap = (() => {
 
   function updateThemeTiles(theme) {
     if (!_tileLayer) return;
-    const url  = theme === 'dark' ? ESRI_DARK : OSM_HOT;
-    const attr = theme === 'dark' ? ESRI_DARK_ATTR : OSM_HOT_ATTR;
+    const url  = theme === 'dark' ? CARTO_DARK : OSM_HOT;
+    const attr = theme === 'dark' ? CARTO_DARK_ATTR : OSM_HOT_ATTR;
     _tileLayer.setUrl(url);
     if (_map && _map.attributionControl) {
+      _map.attributionControl.removeAttribution(CARTO_DARK_ATTR);
       _map.attributionControl.removeAttribution(ESRI_DARK_ATTR);
       _map.attributionControl.removeAttribution(ESRI_LIGHT_ATTR);
       _map.attributionControl.removeAttribution(OSM_ATTR);
