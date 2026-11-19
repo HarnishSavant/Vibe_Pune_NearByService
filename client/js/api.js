@@ -24,40 +24,83 @@ const VibePuneAPI = (() => {
    */
   async function fetchAllPlaces() {
     if (_placesData) return _placesData;
+
+    // ── Try 1: live backend API ──
     console.info('[VibePuneAPI] Fetching real Pune dataset from /api/places...');
     try {
       const data = await request('/places');
       if (data && data.features) {
-        _placesData = data.features.map(f => {
-          const props = f.properties || {};
-          const geom = f.geometry || {};
-          const coords = geom.coordinates || [0, 0];
-          const vibes = props.vibe_categories || [];
-          const mainVibe = vibes[0] || {};
-
-          return {
-            id: props.osm_id,
-            name: props.name || 'Unknown',
-            categoryName: mainVibe.category || 'Other',
-            vibeName: mainVibe.vibe || 'Other',
-            category: mainVibe.slug || 'unknown',
-            address: props.address || '',
-            latitude: coords[1],
-            longitude: coords[0],
-            phone: props.phone || null,
-            website: props.website || null,
-            opening_hours: props.opening_hours || null
-          };
-        });
-        console.info(`[VibePuneAPI] Loaded ${_placesData.length} POIs into memory.`);
-      } else {
-        _placesData = [];
+        _placesData = mapFeatures(data.features, 'api');
+        console.info(`[VibePuneAPI] Loaded ${_placesData.length} POIs from backend API.`);
+        return _placesData;
       }
     } catch (err) {
-      console.error('[VibePuneAPI] Failed to fetch POIs:', err);
-      _placesData = [];
+      console.warn('[VibePuneAPI] Backend API unavailable, falling back to static GeoJSON:', err.message);
     }
+
+    // ── Try 2: static GeoJSON (GitHub Pages / offline) ──
+    try {
+      const res = await fetch('data/services.geojson');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.features) {
+          _placesData = mapFeatures(data.features, 'geojson');
+          console.info(`[VibePuneAPI] Loaded ${_placesData.length} POIs from static GeoJSON.`);
+          return _placesData;
+        }
+      }
+    } catch (err2) {
+      console.error('[VibePuneAPI] Static GeoJSON also failed:', err2);
+    }
+
+    _placesData = [];
     return _placesData;
+  }
+
+  /**
+   * Normalise GeoJSON features from either the backend API or the static export.
+   * @param {Array} features - GeoJSON feature array
+   * @param {'api'|'geojson'} source - which format the data is in
+   */
+  function mapFeatures(features, source) {
+    return features.map(f => {
+      const props = f.properties || {};
+      const coords = (f.geometry && f.geometry.coordinates) || [0, 0];
+
+      if (source === 'api') {
+        const vibes = props.vibe_categories || [];
+        const mainVibe = vibes[0] || {};
+        return {
+          id: props.osm_id,
+          name: props.name || 'Unknown',
+          categoryName: mainVibe.category || 'Other',
+          vibeName: mainVibe.vibe || 'Other',
+          category: mainVibe.slug || 'unknown',
+          address: props.address || '',
+          latitude: coords[1],
+          longitude: coords[0],
+          phone: props.phone || null,
+          website: props.website || null,
+          opening_hours: props.opening_hours || null
+        };
+      }
+
+      // Static GeoJSON format (service_domain / primary_category)
+      return {
+        id: props.osm_id || props.id,
+        name: props.name || 'Unknown',
+        categoryName: props.service_domain || 'Other',
+        vibeName: props.service_domain || 'Other',
+        category: props.primary_category || 'unknown',
+        address: props.address || '',
+        latitude: coords[1],
+        longitude: coords[0],
+        phone: props.phone || null,
+        website: props.website || null,
+        opening_hours: props.opening_hours || null,
+        municipality: props.municipality || null
+      };
+    });
   }
 
   /**
@@ -140,10 +183,15 @@ const VibePuneAPI = (() => {
       try {
         return await request('/categories');
       } catch (err) {
-        if (err.status === 501 || err.status === 0) {
-          return MOCK_CATEGORIES;
-        }
-        throw err;
+        // Build categories from loaded static data
+        await fetchAllPlaces();
+        const catMap = {};
+        (_placesData || []).forEach(p => {
+          const key = p.category || 'unknown';
+          if (!catMap[key]) catMap[key] = { slug: key, name: p.categoryName || key, count: 0 };
+          catMap[key].count++;
+        });
+        return { categories: Object.values(catMap) };
       }
     },
 
@@ -154,10 +202,8 @@ const VibePuneAPI = (() => {
       try {
         return await request('/vibes');
       } catch (err) {
-        if (err.status === 501 || err.status === 0) {
-          return { vibes: window.VibePuneConfig.VIBES };
-        }
-        throw err;
+        // Always fallback when backend unavailable (GitHub Pages)
+        return { vibes: window.VibePuneConfig.VIBES || [] };
       }
     },
 
@@ -173,9 +219,8 @@ const VibePuneAPI = (() => {
         const qs = new URLSearchParams(cleanParams).toString();
         return await request(`/search?${qs}`);
       } catch (err) {
-        if (err.status === 501 || err.status === 0) {
-          // Fallback to in-memory static JSON
-          await fetchAllPlaces();
+        // Fallback to in-memory static JSON (works on GitHub Pages)
+        await fetchAllPlaces();
           
           const centerLat = parseFloat(params.lat);
           const centerLon = parseFloat(params.lon);
@@ -207,8 +252,6 @@ const VibePuneAPI = (() => {
             per_page: limit > 0 ? limit : results.length,
             pages: 1,
           };
-        }
-        throw err;
       }
     },
 
@@ -268,7 +311,6 @@ const VibePuneAPI = (() => {
         const qs = new URLSearchParams(queryParams).toString();
         return await request(`/routing/directions?${qs}`);
       } catch (err) {
-        if (err.status === 501 || err.status === 0) {
           const fromLat = parseFloat(params.from_lat);
           const fromLon = parseFloat(params.from_lon);
           const toLat = parseFloat(params.to_lat);
@@ -283,8 +325,8 @@ const VibePuneAPI = (() => {
             distance_m: dist,
             duration_s: dur,
             summary: {
-              distance_km: round(dist / 1000, 2),
-              duration_min: round(dur / 60, 1),
+              distance_km: parseFloat((dist / 1000).toFixed(2)),
+              duration_min: parseFloat((dur / 60).toFixed(1)),
             },
             geometry: {
               type: 'LineString',
@@ -296,8 +338,6 @@ const VibePuneAPI = (() => {
               ],
             },
           };
-        }
-        throw err;
       }
     },
 
