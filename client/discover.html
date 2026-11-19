@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <title>Discover Map — VibePune WebGIS</title>
+  <meta name="description" content="Explore 8,139 verified spots in Pune on an interactive PostGIS WebGIS map. Find cafes, nightlife, nature, routes, and hidden gems." />
+
+  <!-- Leaflet CSS & MarkerCluster -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Design System & Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css?v=23" />
+  <link rel="stylesheet" href="css/navigation.css?v=23" />
+  <link rel="stylesheet" href="css/main.css?v=23" />
+  <link rel="stylesheet" href="css/components.css?v=23" />
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- 1. MAP (base layer) -->
+    <div id="map" class="map-container" aria-label="Interactive map of Pune"></div>
+
+    <!-- 2. FLOATING UI LAYER -->
+    <div class="ui-layer">
+
+      <!-- ═══ UNIFIED SITE HEADER (matches all other pages) ═══ -->
+      <header class="app-header app-header--map">
+        <!-- Brand -->
+        <a href="index.html" class="site-brand" aria-label="VibePune Homepage">
+          <div class="site-brand__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div class="site-brand__text-group">
+            <span class="site-brand__title">Vibe<span>Pune</span></span>
+            <span class="site-brand__pill">MAP</span>
+          </div>
+        </a>
+
+        <!-- Global Smart Search (compact, flex-grows to fill space) -->
+        <div class="header-search-wrap" id="header-search-wrap">
+          <div class="header-search" id="header-search-box">
+            <svg class="header-search__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              id="search-input"
+              class="header-search__input"
+              placeholder="Search spots, vibes, areas…"
+              aria-label="Search places, vibes and areas"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button class="header-search__clear hidden" id="btn-search-clear" title="Clear search" aria-label="Clear search">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="search-dropdown hidden" id="search-dropdown" role="listbox" aria-label="Search suggestions"></div>
+        </div>
+
+        <!-- Desktop Nav (hidden below 1100px, shown in mobile drawer) -->
+        <!-- Desktop Nav (hidden below 1100px, shown in mobile drawer) -->
+        <nav class="site-nav map-site-nav" aria-label="Primary navigation">
+          <a href="index.html" class="site-nav__link">Home</a>
+          <a href="discover.html" class="site-nav__link is-active">Map</a>
+          <a href="maplibre.html" class="site-nav__link">Vector Map (MapLibre)</a>
+          <a href="vibe.html" class="site-nav__link">Vibe ✨</a>
+          <a href="events.html" class="site-nav__link">Events</a>
+          <a href="insights.html" class="site-nav__link">Insights</a>
+          <a href="saved.html" class="site-nav__link">Saved</a>
+          <a href="about.html" class="site-nav__link">About</a>
+        </nav>
+
+        <!-- Map-specific action cluster -->
+        <div class="map-header-actions">
+          <a href="vibe.html" class="map-action-btn map-action-btn--vibe" id="btn-open-vibe-quiz" title="Find Your Vibe" aria-label="Open What's Your Vibe personalized quiz">
+            <span>✨</span><span class="map-action-btn__label">Find Vibe</span>
+          </a>
+          <button class="map-action-btn" id="btn-toggle-events" title="Events" aria-label="Discover upcoming events">
+            🎟️
+          </button>
+          <button class="map-action-btn" id="btn-toggle-analytics" title="Analytics" aria-label="Open GIS spatial analytics">
+            📊
+          </button>
+          <a href="saved.html" class="map-action-btn" id="btn-saved-places" title="Saved Places" aria-label="View saved places" style="position:relative;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span class="header-badge hidden" id="saved-badge">0</span>
+          </a>
+          <button class="map-action-btn btn-theme-toggle" id="btn-theme-toggle" title="Toggle theme" aria-label="Toggle dark/light mode">
+            <svg class="theme-icon-light" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="theme-icon-dark hidden" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          <button class="map-action-btn mobile-menu-btn" id="mobile-menu-btn" aria-label="Open mobile menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- ═══ BODY ═══ -->
+      <div class="app-body">
+
+        <!-- LEFT: Discovery Panel -->
+        <aside class="discovery-panel" id="discovery-panel">
+          <div class="discovery-panel__header">
+            <!-- Modern Hero Discovery Header -->
+            <div class="hero-discovery">
+              <span class="hero-discovery__tag">✨ Spatial Lifestyle Discovery</span>
+              <h2 class="panel-title">Find your vibe in Pune.</h2>
+              <p class="panel-subtitle">Explore 8,139 curated spots, cafes, peaceful parks & nightlife.</p>
+              <a href="vibe.html" class="hero-vibe-card" id="btn-hero-vibe-quiz" aria-label="Open What's Your Vibe discovery">
+                <span class="hero-vibe-card__icon">✨</span>
+                <div class="hero-vibe-card__text">
+                  <span class="hero-vibe-card__title">What's Your Vibe?</span>
+                  <span class="hero-vibe-card__sub">Answer 5 quick questions for AI recommendations</span>
+                </div>
+                <svg class="hero-vibe-card__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </a>
+            </div>
+
+            <!-- Location Selector -->
+            <div class="location-selector" id="btn-location-selector" role="button" tabindex="0" aria-label="Change base location">
+              <svg class="location-selector__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="10" r="3"></circle>
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              </svg>
+              <span class="location-selector__text" id="current-location-text">Shivajinagar</span>
+              <span class="location-selector__change">Change ▾</span>
+            </div>
+
+            <!-- Location Controls (Hidden by default) -->
+            <div id="advanced-location-controls" class="location-controls hidden">
+               <label for="simulator-select" class="location-controls__label">Explore from neighborhood:</label>
+               <select id="simulator-select">
+                 <option value="default">Pune Central (Shivajinagar)</option>
+                 <option value="koregaon">Koregaon Park</option>
+                 <option value="fcroad">FC Road</option>
+                 <option value="viman_nagar">Viman Nagar</option>
+                 <option value="kothrud">Kothrud</option>
+                 <option value="hinjewadi">Hinjewadi</option>
+               </select>
+            </div>
+
+            <!-- Radius Control (Always visible) -->
+            <div class="radius-control">
+              <div class="radius-control__header">
+                <span class="radius-control__label">Search Radius</span>
+                <span class="radius-control__value" id="radius-value-display">2 km</span>
+              </div>
+              <input type="range" id="radius-slider" class="radius-slider" min="250" max="10000" step="250" value="2000" aria-label="Search radius in meters" />
+            </div>
+          </div>
+
+          <div class="discovery-panel__content">
+            <!-- Dynamic Vibes/Categories -->
+            <div class="section-label-wrap">
+              <span class="section-label">Curated Vibes</span>
+              <button class="section-reset-btn hidden" id="btn-clear-category" title="Reset category filter">Reset</button>
+            </div>
+            <div class="vibe-chips" id="categories-grid" role="group" aria-label="Lifestyle category filters">
+              <!-- Dynamically populated from /api/categories -->
+            </div>
+
+            <!-- Result Count & Filter Status -->
+            <div class="result-count" id="result-count">
+              <span class="result-count__text"><span class="result-count__number" id="result-count-number">0</span> places found</span>
+              <span class="result-filter-tag hidden" id="result-filter-tag"></span>
+            </div>
+
+            <!-- Recommendations Section -->
+            <div id="recommendations-panel" class="recommendations-panel hidden">
+              <div class="recommendations-panel__header">
+                <div class="recommendations-panel__title-wrap">
+                  <span class="recommendations-panel__badge">✨ AI Vibe Match</span>
+                  <h3 class="recommendations-panel__title">Your Recommended Spots</h3>
+                  <p class="recommendations-panel__summary" id="recs-summary-text">Tailored for your vibe</p>
+                </div>
+                <button class="recommendations-panel__close" id="btn-close-recommendations" title="Exit recommendations" aria-label="Exit recommendations view">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+              </div>
+
+              <!-- Recommendation Loading Animation -->
+              <div id="recommendations-loading" class="recommendations-loading hidden">
+                <div class="vibe-pulsing-aura"></div>
+                <span class="recs-loading-text">Finding places that match your vibe...</span>
+                <span class="recs-loading-subtext">Gemini understanding intent & PostGIS spatial ranking</span>
+              </div>
+
+              <!-- Recommendation Cards List -->
+              <div id="recommendations-list" class="recommendations-list"></div>
+
+              <!-- Show More Button -->
+              <button class="btn-load-more hidden" id="btn-load-more-recs" type="button">
+                <span>Show More Matches</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+            </div>
+
+            <!-- Events Section -->
+            <div id="events-panel" class="events-panel hidden">
+              <div class="events-panel__header">
+                <div class="events-panel__title-wrap">
+                  <span class="events-panel__badge">🎟️ Upcoming Experiences</span>
+                  <h3 class="events-panel__title">Pune Live Events</h3>
+                  <p class="events-panel__summary" id="events-summary-text">Verified cultural, musical & social happenings</p>
+                </div>
+                <button class="events-panel__close" id="btn-close-events" title="Exit events" aria-label="Exit events view">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+              </div>
+
+              <!-- Temporal Filter Pills -->
+              <div class="events-time-filters" role="tablist" aria-label="Event timeframe">
+                <button type="button" class="event-time-chip is-selected" data-timeframe="all">All Upcoming</button>
+                <button type="button" class="event-time-chip" data-timeframe="today">Today</button>
+                <button type="button" class="event-time-chip" data-timeframe="tomorrow">Tomorrow</button>
+                <button type="button" class="event-time-chip" data-timeframe="this_weekend">Weekend</button>
+                <button type="button" class="event-time-chip" data-timeframe="next_7_days">7 Days</button>
+              </div>
+
+              <!-- Events List -->
+              <div id="events-list" class="events-list"></div>
+            </div>
+
+            <!-- Standard Results List -->
+            <div id="results-list" class="results-list stagger-children"></div>
+
+            <!-- Loading skeleton (shown during search) -->
+            <div id="results-loading" class="results-list hidden" aria-hidden="true">
+              <div class="skeleton-card"><div class="skeleton-line skeleton-line--long"></div><div class="skeleton-line skeleton-line--medium"></div><div class="skeleton-line skeleton-line--short"></div></div>
+              <div class="skeleton-card"><div class="skeleton-line skeleton-line--long"></div><div class="skeleton-line skeleton-line--medium"></div><div class="skeleton-line skeleton-line--short"></div></div>
+              <div class="skeleton-card"><div class="skeleton-line skeleton-line--long"></div><div class="skeleton-line skeleton-line--medium"></div><div class="skeleton-line skeleton-line--short"></div></div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Map Floating Controls -->
+        <div class="map-toolbar">
+          <button class="map-btn" id="btn-locate" title="My Location" aria-label="Use my location">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+          </button>
+          <button class="map-btn" id="btn-zoom-default" title="Reset View" aria-label="Reset map view">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>
+          </button>
+        </div>
+
+        <!-- Floating Route Info Panel -->
+        <div class="route-panel hidden" id="route-panel" aria-label="Route Information">
+          <div class="route-panel__header">
+            <div class="route-panel__title-wrap">
+              <span class="route-panel__badge">Route</span>
+              <h4 class="route-panel__destination" id="route-destination-name">Destination</h4>
+            </div>
+            <button class="route-panel__close" id="btn-route-clear" title="Clear Route" aria-label="Clear route">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+
+          <div class="route-panel__stats">
+            <div class="route-stat">
+              <span class="route-stat__label">Distance</span>
+              <span class="route-stat__value" id="route-distance-val">0 km</span>
+            </div>
+            <div class="route-stat">
+              <span class="route-stat__label">Est. Time</span>
+              <span class="route-stat__value" id="route-duration-val">0 min</span>
+            </div>
+          </div>
+
+          <!-- Mode Switcher -->
+          <div class="route-panel__modes" role="tablist" aria-label="Travel mode">
+            <button class="route-mode-btn is-active" id="btn-mode-driving" data-mode="driving" role="tab" aria-selected="true">
+              <span>🚗 Driving</span>
+            </button>
+            <button class="route-mode-btn" id="btn-mode-walking" data-mode="walking" role="tab" aria-selected="false">
+              <span>🚶 Walking</span>
+            </button>
+          </div>
+
+          <!-- Navigation Action -->
+          <div class="route-panel__actions">
+            <a class="route-nav-btn" id="btn-open-gmaps" href="#" target="_blank" rel="noopener noreferrer" title="Open in Google Maps" aria-label="Open in Google Maps">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              <span>Open in Google Maps ↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- RIGHT: Place Detail Drawer -->
+        <aside class="detail-drawer" id="detail-drawer" aria-label="Place Details">
+          <div class="detail-drawer__close" id="btn-close-drawer" title="Close details (Esc)" aria-label="Close details">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </div>
+
+          <!-- Hero Visual Area -->
+          <div class="detail-drawer__hero" id="detail-hero">
+            <div class="detail-drawer__hero-placeholder" id="detail-hero-placeholder">
+              <span class="detail-drawer__placeholder-icon" id="detail-icon">📍</span>
+            </div>
+            <img class="detail-drawer__hero-image hidden" id="detail-image" alt="Place photograph" loading="lazy" />
+            <div class="detail-drawer__badge-overlay">
+              <span class="detail-badge" id="detail-badge">Place</span>
+            </div>
+          </div>
+
+          <div class="detail-drawer__body">
+            <!-- Loading Skeleton -->
+            <div id="detail-loading" class="detail-loading hidden">
+              <div class="skeleton-line skeleton-line--long"></div>
+              <div class="skeleton-line skeleton-line--medium"></div>
+              <div class="skeleton-line skeleton-line--short"></div>
+            </div>
+
+            <!-- Content Area -->
+            <div id="detail-content">
+              <!-- Title & Meta -->
+              <div class="detail-header-block">
+                <h3 class="detail-title" id="detail-name">Place Name</h3>
+                <div class="detail-meta">
+                  <span id="detail-category">Category</span>
+                  <span class="dot">•</span>
+                  <span id="detail-distance">1.2 km away</span>
+                </div>
+
+                <!-- Verified Ratings -->
+                <div class="detail-rating-row hidden" id="detail-rating-row">
+                  <div class="detail-stars" id="detail-stars">★★★★★</div>
+                  <span class="detail-rating-score" id="detail-rating-score">4.5</span>
+                  <span class="detail-review-count" id="detail-review-count">(0 reviews)</span>
+                </div>
+              </div>
+
+              <!-- Quick Actions Bar -->
+              <div class="detail-actions-bar">
+                <button class="detail-action-btn detail-action-btn--primary" id="btn-detail-directions" title="Get Directions" aria-label="Get directions">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                  <span>Directions</span>
+                </button>
+
+                <a class="detail-action-btn hidden" id="btn-detail-call" href="#" title="Call" aria-label="Call place">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  <span>Call</span>
+                </a>
+
+                <a class="detail-action-btn hidden" id="btn-detail-website" href="#" target="_blank" rel="noopener noreferrer" title="Visit Website" aria-label="Visit website">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                  <span>Website</span>
+                </a>
+
+                <a class="detail-action-btn hidden" id="btn-detail-gmaps" href="#" target="_blank" rel="noopener noreferrer" title="Open in Google Maps" aria-label="Open in Google Maps">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  <span>Google Maps ↗</span>
+                </a>
+
+                <button class="detail-action-btn" id="btn-detail-save" title="Save Place" aria-label="Save place">
+                  <svg id="detail-save-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                  <span id="detail-save-text">Save</span>
+                </button>
+
+                <button class="detail-action-btn" id="btn-detail-share" title="Share Place" aria-label="Share place">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                  <span>Share</span>
+                </button>
+              </div>
+
+              <!-- About / Description -->
+              <div class="detail-section">
+                <div class="detail-section__header">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                  <h4>About</h4>
+                </div>
+                <p class="detail-section__text" id="detail-description">No description available</p>
+              </div>
+
+              <!-- Location & Coordinates -->
+              <div class="detail-section">
+                <div class="detail-section__header">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <h4>Location</h4>
+                </div>
+                <p class="detail-section__text" id="detail-address">Address not available</p>
+                <div class="detail-coordinates" id="detail-coords">18.5204° N, 73.8567° E</div>
+              </div>
+
+              <!-- Opening Hours -->
+              <div class="detail-section">
+                <div class="detail-section__header">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <h4>Opening Hours</h4>
+                </div>
+                <p class="detail-section__text" id="detail-hours">Opening hours not available</p>
+              </div>
+
+              <!-- Contact -->
+              <div class="detail-section" id="detail-contact-section">
+                <div class="detail-section__header">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  <h4>Contact</h4>
+                </div>
+                <div class="detail-contact-list" id="detail-contact-list">
+                  <div class="detail-contact-item" id="detail-contact-phone-row">
+                    <span class="detail-contact-label">Phone:</span>
+                    <span class="detail-contact-val" id="detail-contact-phone">Not available</span>
+                  </div>
+                  <div class="detail-contact-item" id="detail-contact-web-row">
+                    <span class="detail-contact-label">Website:</span>
+                    <span class="detail-contact-val" id="detail-contact-web">Not available</span>
+                  </div>
+                  <div class="detail-contact-item hidden" id="detail-contact-social-row">
+                    <span class="detail-contact-label">Social:</span>
+                    <span class="detail-contact-val" id="detail-contact-social"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reviews Section -->
+              <div class="detail-section hidden" id="detail-reviews-section">
+                <div class="detail-section__header">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  <h4>Verified Reviews</h4>
+                </div>
+                <div class="detail-reviews-list" id="detail-reviews-list"></div>
+              </div>
+
+              <!-- Source Attribution -->
+              <div class="detail-source-badge">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span>Place data sourced from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a></span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div> <!-- /app-body -->
+    </div> <!-- /ui-layer -->
+
+    <!-- Loading Overlay -->
+    <div id="map-loading" class="map-loading">
+      <div class="spinner"></div>
+      <span class="section-label">Loading Pune WebGIS...</span>
+    </div>
+
+    <!-- ═══ "WHAT'S YOUR VIBE?" QUESTIONNAIRE MODAL ═══ -->
+    <div id="vibe-quiz-modal" class="vibe-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="quiz-modal-title">
+      <div class="vibe-modal">
+        <!-- Modal Header -->
+        <div class="vibe-modal__header">
+          <div class="vibe-modal__title-group">
+            <span class="vibe-modal__badge">✨ AI Vibe Engine</span>
+            <h3 class="vibe-modal__title" id="quiz-modal-title">What's Your Vibe?</h3>
+          </div>
+          <button class="vibe-modal__close" id="btn-close-vibe-quiz" title="Close" aria-label="Close quiz">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="vibe-progress">
+          <div class="vibe-progress__bar">
+            <div class="vibe-progress__fill" id="quiz-progress-fill" style="width: 20%;"></div>
+          </div>
+          <span class="vibe-progress__text" id="quiz-progress-text">Step 1 of 5</span>
+        </div>
+
+        <!-- Question Steps Container -->
+        <div class="vibe-quiz__body">
+          <!-- STEP 1: Companions -->
+          <div class="vibe-step" data-step="1">
+            <h4 class="vibe-step__question">Who are you heading out with?</h4>
+            <p class="vibe-step__hint">Select one or more companions for tailored spot recommendations.</p>
+            <div class="vibe-options-grid" data-group="companions">
+              <button type="button" class="vibe-option-chip" data-value="solo"><span class="vibe-option-chip__icon">🧘</span><span>Solo Explorer</span></button>
+              <button type="button" class="vibe-option-chip" data-value="partner"><span class="vibe-option-chip__icon">❤️</span><span>With Partner</span></button>
+              <button type="button" class="vibe-option-chip" data-value="friends"><span class="vibe-option-chip__icon">👥</span><span>With Friends</span></button>
+              <button type="button" class="vibe-option-chip" data-value="family"><span class="vibe-option-chip__icon">👨‍👩‍👧‍👦</span><span>With Family</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Activity -->
+          <div class="vibe-step hidden" data-step="2">
+            <h4 class="vibe-step__question">What do you feel like doing?</h4>
+            <p class="vibe-step__hint">Select your desired activity or experience.</p>
+            <div class="vibe-options-grid" data-group="activities">
+              <button type="button" class="vibe-option-chip" data-value="coffee"><span class="vibe-option-chip__icon">☕</span><span>Chill & Coffee</span></button>
+              <button type="button" class="vibe-option-chip" data-value="food"><span class="vibe-option-chip__icon">🍽️</span><span>Foodie & Dining</span></button>
+              <button type="button" class="vibe-option-chip" data-value="nightlife"><span class="vibe-option-chip__icon">🎵</span><span>Night Out & Pubs</span></button>
+              <button type="button" class="vibe-option-chip" data-value="nature"><span class="vibe-option-chip__icon">🌿</span><span>Nature & Greenery</span></button>
+              <button type="button" class="vibe-option-chip" data-value="fitness"><span class="vibe-option-chip__icon">🏃</span><span>Active & Sports</span></button>
+              <button type="button" class="vibe-option-chip" data-value="shopping"><span class="vibe-option-chip__icon">🛍️</span><span>Shopping & Malls</span></button>
+              <button type="button" class="vibe-option-chip" data-value="arts"><span class="vibe-option-chip__icon">🎨</span><span>Arts & Culture</span></button>
+              <button type="button" class="vibe-option-chip" data-value="entertainment"><span class="vibe-option-chip__icon">🎬</span><span>Cinema & Fun</span></button>
+              <button type="button" class="vibe-option-chip" data-value="adventure"><span class="vibe-option-chip__icon">📸</span><span>Scenic & Views</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Mood -->
+          <div class="vibe-step hidden" data-step="3">
+            <h4 class="vibe-step__question">What's your mood today?</h4>
+            <p class="vibe-step__hint">Match the energy of your outing.</p>
+            <div class="vibe-options-grid" data-group="moods">
+              <button type="button" class="vibe-option-chip" data-value="relaxed"><span class="vibe-option-chip__icon">☕</span><span>Relaxed & Calm</span></button>
+              <button type="button" class="vibe-option-chip" data-value="romantic"><span class="vibe-option-chip__icon">🌹</span><span>Romantic & Cozy</span></button>
+              <button type="button" class="vibe-option-chip" data-value="energetic"><span class="vibe-option-chip__icon">⚡</span><span>Energetic & High Energy</span></button>
+              <button type="button" class="vibe-option-chip" data-value="social"><span class="vibe-option-chip__icon">🎉</span><span>Social & Fun</span></button>
+              <button type="button" class="vibe-option-chip" data-value="creative"><span class="vibe-option-chip__icon">💡</span><span>Creative & Study</span></button>
+              <button type="button" class="vibe-option-chip" data-value="adventurous"><span class="vibe-option-chip__icon">🌄</span><span>Adventurous & Outgoing</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 4: Environment & Budget -->
+          <div class="vibe-step hidden" data-step="4">
+            <h4 class="vibe-step__question">Setting & Budget preferences</h4>
+            <p class="vibe-step__hint">Choose comfort level and spending preference.</p>
+            
+            <label class="vibe-sublabel">Environment</label>
+            <div class="vibe-options-grid" data-group="environment" data-single="true">
+              <button type="button" class="vibe-option-chip is-selected" data-value="either"><span>Either / Any</span></button>
+              <button type="button" class="vibe-option-chip" data-value="indoor"><span class="vibe-option-chip__icon">🏛️</span><span>Indoor / AC</span></button>
+              <button type="button" class="vibe-option-chip" data-value="outdoor"><span class="vibe-option-chip__icon">🌳</span><span>Outdoor / Open Air</span></button>
+            </div>
+
+            <label class="vibe-sublabel" style="margin-top: 14px;">Budget Tier</label>
+            <div class="vibe-options-grid" data-group="budget" data-single="true">
+              <button type="button" class="vibe-option-chip is-selected" data-value="any"><span>Any Budget</span></button>
+              <button type="button" class="vibe-option-chip" data-value="free"><span>Free Spots</span></button>
+              <button type="button" class="vibe-option-chip" data-value="low"><span>Budget Friendly (₹)</span></button>
+              <button type="button" class="vibe-option-chip" data-value="medium"><span>Moderate (₹₹)</span></button>
+              <button type="button" class="vibe-option-chip" data-value="premium"><span>Premium / Luxe (₹₹₹)</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 5: Distance & Free-text -->
+          <div class="vibe-step hidden" data-step="5">
+            <h4 class="vibe-step__question">Distance & Custom Vibe</h4>
+            <p class="vibe-step__hint">Tell Gemini exactly what you want in plain words!</p>
+            
+            <label class="vibe-sublabel">Maximum Distance</label>
+            <div class="vibe-options-grid" data-group="distance" data-single="true">
+              <button type="button" class="vibe-option-chip" data-value="1"><span>1 km</span></button>
+              <button type="button" class="vibe-option-chip is-selected" data-value="3"><span>3 km</span></button>
+              <button type="button" class="vibe-option-chip" data-value="5"><span>5 km</span></button>
+              <button type="button" class="vibe-option-chip" data-value="10"><span>10 km</span></button>
+            </div>
+
+            <label class="vibe-sublabel" style="margin-top: 14px;" for="quiz-free-text">Describe your perfect spot (Optional)</label>
+            <textarea
+              id="quiz-free-text"
+              class="vibe-quiz__textarea"
+              rows="3"
+              placeholder="e.g. A peaceful aesthetic cafe for a date on FC Road, good coffee, within 3 km..."
+            ></textarea>
+            <div class="vibe-quiz__ai-badge">
+              <span>✨ Gemini Intent Extraction + PostGIS Proximity Ranking</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer Navigation -->
+        <div class="vibe-modal__footer">
+          <button type="button" class="btn-quiz-nav btn-quiz-nav--secondary hidden" id="btn-quiz-back">Back</button>
+          <button type="button" class="btn-quiz-nav btn-quiz-nav--text" id="btn-quiz-skip">Skip</button>
+          <button type="button" class="btn-quiz-nav btn-quiz-nav--primary" id="btn-quiz-next">Next</button>
+          <button type="button" class="btn-quiz-nav btn-quiz-nav--submit hidden" id="btn-quiz-submit">Find My Vibe ✨</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SPATIAL ANALYTICS & GIS INSIGHTS MODAL ═══ -->
+    <div id="analytics-modal" class="vibe-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="analytics-modal-title">
+      <div class="vibe-modal vibe-modal--wide">
+        <div class="vibe-modal__header">
+          <div class="vibe-modal__title-group">
+            <span class="vibe-modal__badge">📊 PostGIS Spatial Analytics</span>
+            <h3 class="vibe-modal__title" id="analytics-modal-title">Pune Urban & Accessibility Insights</h3>
+          </div>
+          <button class="vibe-modal__close" id="btn-close-analytics" title="Close" aria-label="Close analytics modal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div class="analytics-tabs" role="tablist">
+          <button type="button" class="analytics-tab is-active" data-tab="overview" role="tab" aria-selected="true">POI Distribution</button>
+          <button type="button" class="analytics-tab" data-tab="accessibility" role="tab" aria-selected="false">Accessibility Inspector</button>
+          <button type="button" class="analytics-tab" data-tab="density" role="tab" aria-selected="false">Hotspot Density</button>
+        </div>
+
+        <div class="analytics-body">
+          <!-- TAB 1: Overview -->
+          <div class="analytics-view" id="analytics-tab-overview">
+            <div class="analytics-stats-grid">
+              <div class="stat-card">
+                <span class="stat-card__val" id="stat-total-pois">8,139</span>
+                <span class="stat-card__label">Validated POIs</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-card__val" id="stat-total-events">10</span>
+                <span class="stat-card__label">Verified Events</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-card__val">100%</span>
+                <span class="stat-card__label">PostGIS Indexed</span>
+              </div>
+            </div>
+            <h4 class="analytics-subheading">Category Composition</h4>
+            <div class="category-bars-list" id="analytics-category-bars"></div>
+          </div>
+
+          <!-- TAB 2: Accessibility Inspector -->
+          <div class="analytics-view hidden" id="analytics-tab-accessibility">
+            <p class="analytics-hint">Multi-radius accessibility analysis around active reference point (PostGIS ST_DWithin buffering & walking speed decay).</p>
+            <div class="accessibility-radii-grid" id="analytics-radii-container"></div>
+          </div>
+
+          <!-- TAB 3: Hotspot Density -->
+          <div class="analytics-view hidden" id="analytics-tab-density">
+            <div class="density-controls-row">
+              <label for="density-category-select">Filter Category:</label>
+              <select id="density-category-select" class="density-select">
+                <option value="all">All Lifestyle Spots</option>
+                <option value="coffee">Cafes & Coffee</option>
+                <option value="dining">Dining & Food</option>
+                <option value="nightlife">Nightlife & Pubs</option>
+                <option value="nature">Parks & Nature</option>
+                <option value="shopping">Shopping & Retail</option>
+              </select>
+              <button type="button" class="btn-primary-sm" id="btn-toggle-density-overlay">Show on Map</button>
+            </div>
+            <div class="density-table-wrap">
+              <table class="density-table">
+                <thead>
+                  <tr><th>Neighbourhood</th><th>Places</th><th>Density Tier</th></tr>
+                </thead>
+                <tbody id="density-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="vibe-toast" class="vibe-toast hidden" role="status" aria-live="polite"></div>
+
+  </div> <!-- /app-shell -->
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop">
+    <div class="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <div class="site-brand">
+          <div class="site-brand__icon">⚡</div>
+          <div class="site-brand__text-group">
+            <span class="site-brand__title">Vibe<span>Pune</span></span>
+          </div>
+        </div>
+        <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation">✕</button>
+      </div>
+
+      <nav class="mobile-nav-links">
+        <a href="index.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🏠</span><span>Home</span></a>
+        <a href="discover.html" class="mobile-nav-link is-active"><span class="mobile-nav-link__icon">🗺️</span><span>Discover Map</span></a>
+        <a href="vibe.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">✨</span><span>Find Your Vibe</span></a>
+        <a href="events.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🎟️</span><span>Pune Events</span></a>
+        <a href="insights.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">📊</span><span>Spatial Insights</span></a>
+        <a href="saved.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">❤️</span><span>Saved Places</span></a>
+        <a href="about.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">📖</span><span>About & Vision</span></a>
+      </nav>
+
+      <div class="mobile-nav-footer">
+        <div class="badge badge--lime">⚡ 8,139 PostGIS POIs Active</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+  <script src="js/config.js?v=25"></script>
+  <script src="js/api.js?v=25"></script>
+  <script src="js/map/map.js?v=25"></script>
+  <script src="js/categories/categories.js?v=25"></script>
+  <script src="js/nav.js?v=25"></script>
+  <script src="js/app.js?v=25"></script>
+</body>
+</html>

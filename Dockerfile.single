@@ -1,0 +1,15 @@
+# ============================================================
+# Single-Stage Unoptimized Development Frontend Image
+# ============================================================
+FROM node:20
+WORKDIR /app
+
+# Copy entire frontend along with dev packages and dependencies
+COPY frontend/ /app/
+
+# Install global static server
+RUN npm install -g serve
+
+EXPOSE 3000
+
+CMD ["serve", "-s", ".", "-l", "3000"]

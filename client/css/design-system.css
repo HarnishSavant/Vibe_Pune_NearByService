@@ -1,0 +1,611 @@
+/* ================================================================
+   VibePune — design-system.css
+   Phase B: Premium Gen-Z Visual Design System & Design Tokens
+   Vibrant, Expressive, Editorial & Academic WebGIS Architecture
+   ================================================================ */
+
+/* ---- Typography Imports ----------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+/* ----------------------------------------------------------------
+   1. Root Design Tokens — Light Theme (Default)
+   ---------------------------------------------------------------- */
+:root {
+  /* Color Mode */
+  --color-scheme: light;
+
+  /* Surfaces & Backgrounds */
+  --bg-app:             #f8fafc;
+  --bg-surface:         #ffffff;
+  --bg-surface-elevated:#ffffff;
+  --bg-surface-sunken:  #f1f5f9;
+  --bg-surface-hover:   #f8fafc;
+  --bg-surface-active:  #fff0f3;
+  --bg-glass:           rgba(255, 255, 255, 0.82);
+  --bg-glass-strong:    rgba(255, 255, 255, 0.94);
+  --bg-glass-border:    rgba(226, 232, 240, 0.8);
+  --backdrop-blur:      blur(16px);
+  --backdrop-blur-sm:   blur(8px);
+
+  /* Primary Brand — Vivid Hot Coral / Electric Rose */
+  --primary:            #ff2a6d;
+  --primary-hover:      #e51b5c;
+  --primary-light:      #fff0f4;
+  --primary-subtle:     rgba(255, 42, 109, 0.08);
+  --primary-glow:       rgba(255, 42, 109, 0.28);
+  --primary-border:     rgba(255, 42, 109, 0.25);
+
+  /* Secondary Brand — Electric Violet */
+  --secondary:          #7928ca;
+  --secondary-hover:    #651da8;
+  --secondary-light:    #f5edfd;
+  --secondary-subtle:   rgba(121, 40, 202, 0.08);
+  --secondary-glow:     rgba(121, 40, 202, 0.24);
+
+  /* Accent 1 — Neon Tangerine */
+  --accent-orange:      #ff6b00;
+  --accent-orange-light:#fff4eb;
+  --accent-orange-glow: rgba(255, 107, 0, 0.24);
+
+  /* Accent 2 — Cyber Aqua / Teal */
+  --accent-aqua:        #00c9db;
+  --accent-aqua-light:  #e6fcfe;
+  --accent-aqua-glow:   rgba(0, 201, 219, 0.24);
+
+  /* Accent 3 — Acid Lime */
+  --accent-lime:        #b8e600;
+  --accent-lime-light:  #f7fde6;
+  --accent-lime-text:   #4d6600;
+  --accent-lime-glow:   rgba(184, 230, 0, 0.3);
+
+  /* Functional Status */
+  --success:            #10b981;
+  --success-light:      #ecfdf5;
+  --warning:            #f59e0b;
+  --warning-light:      #fffbeb;
+  --danger:             #ef4444;
+  --danger-light:       #fef2f2;
+  --info:               #3b82f6;
+  --info-light:         #eff6ff;
+
+  /* Typography Colors */
+  --text-primary:       #0f172a;
+  --text-secondary:     #334155;
+  --text-muted:         #64748b;
+  --text-faint:         #94a3b8;
+  --text-inverse:       #ffffff;
+  --text-accent:        #ff2a6d;
+
+  /* Borders & Dividers */
+  --border-subtle:      #f1f5f9;
+  --border-default:     #e2e8f0;
+  --border-strong:      #cbd5e1;
+  --border-focus:       rgba(255, 42, 109, 0.5);
+
+  /* Signature Gradients */
+  --gradient-brand:     linear-gradient(135deg, #ff2a6d 0%, #7928ca 52%, #00c9db 100%);
+  --gradient-sunset:    linear-gradient(135deg, #ff6b00 0%, #ff2a6d 55%, #7928ca 100%);
+  --gradient-violet:    linear-gradient(135deg, #7928ca 0%, #4f46e5 100%);
+  --gradient-aqua:      linear-gradient(135deg, #00c9db 0%, #10b981 100%);
+  --gradient-lime:      linear-gradient(135deg, #b8e600 0%, #00c9db 100%);
+  --gradient-dark:      linear-gradient(180deg, rgba(15,23,42,0.92) 0%, rgba(15,23,42,0.98) 100%);
+  --gradient-surface:   linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
+
+  /* Typography Scales */
+  --font-display:       'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-sans:          'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-mono:          'JetBrains Mono', monospace;
+
+  --text-2xs:           0.6875rem; /* 11px */
+  --text-xs:            0.75rem;   /* 12px */
+  --text-sm:            0.875rem;  /* 14px */
+  --text-base:          1rem;      /* 16px */
+  --text-lg:            1.125rem;  /* 18px */
+  --text-xl:            1.25rem;   /* 20px */
+  --text-2xl:           1.5rem;    /* 24px */
+  --text-3xl:           1.875rem;  /* 30px */
+  --text-4xl:           2.25rem;   /* 36px */
+  --text-5xl:           3rem;      /* 48px */
+  --text-6xl:           3.75rem;   /* 60px */
+
+  --weight-regular:     400;
+  --weight-medium:      500;
+  --weight-semibold:    600;
+  --weight-bold:        700;
+  --weight-extrabold:   800;
+  --weight-black:       900;
+
+  --leading-tight:      1.15;
+  --leading-snug:       1.3;
+  --leading-normal:     1.5;
+  --leading-relaxed:    1.65;
+
+  /* Spacing Scale (4px base) */
+  --sp-1:               4px;
+  --sp-2:               8px;
+  --sp-2-5:             10px;
+  --sp-3:               12px;
+  --sp-4:               16px;
+  --sp-5:               20px;
+  --sp-6:               24px;
+  --sp-8:               32px;
+  --sp-10:              40px;
+  --sp-12:              48px;
+  --sp-16:              64px;
+  --sp-20:              80px;
+  --sp-24:              96px;
+
+  /* Border Radii */
+  --r-xs:               4px;
+  --r-sm:               8px;
+  --r-md:               12px;
+  --r-lg:               16px;
+  --r-xl:               20px;
+  --r-2xl:              28px;
+  --r-3xl:              36px;
+  --r-full:             9999px;
+
+  /* Elevated Shadows */
+  --shadow-xs:          0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm:          0 2px 6px rgba(15, 23, 42, 0.06);
+  --shadow-md:          0 6px 18px rgba(15, 23, 42, 0.07), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-lg:          0 12px 32px rgba(15, 23, 42, 0.09), 0 4px 8px rgba(15, 23, 42, 0.04);
+  --shadow-xl:          0 24px 56px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.04);
+  --shadow-card-hover:  0 20px 40px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-primary:     0 8px 24px rgba(255, 42, 109, 0.32);
+  --shadow-violet:      0 8px 24px rgba(121, 40, 202, 0.28);
+
+  /* Transitions & Motion Timing */
+  --ease:               cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-spring:        cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out:           cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast:             140ms;
+  --t-normal:           240ms;
+  --t-slow:             360ms;
+
+  /* Layout Constants */
+  --nav-height:         72px;
+  --max-content-w:      1240px;
+  --max-reading-w:      760px;
+  --z-base:             1;
+  --z-nav:              500;
+  --z-modal:            1000;
+  --z-toast:            2000;
+}
+
+/* ----------------------------------------------------------------
+   2. Dark Theme Tokens — Cyberpunk Pune Night Mode
+   ---------------------------------------------------------------- */
+[data-theme="dark"] {
+  --color-scheme: dark;
+
+  /* Surfaces & Backgrounds */
+  --bg-app:             #090c15;
+  --bg-surface:         #101524;
+  --bg-surface-elevated:#151c30;
+  --bg-surface-sunken:  #06080e;
+  --bg-surface-hover:   #182138;
+  --bg-surface-active:  #251522;
+  --bg-glass:           rgba(16, 21, 36, 0.85);
+  --bg-glass-strong:    rgba(16, 21, 36, 0.95);
+  --bg-glass-border:    rgba(37, 49, 77, 0.7);
+
+  /* Primary Brand — Hot Neon Coral */
+  --primary:            #ff3366;
+  --primary-hover:      #ff4d7a;
+  --primary-light:      #2b0d18;
+  --primary-subtle:     rgba(255, 51, 102, 0.14);
+  --primary-glow:       rgba(255, 51, 102, 0.42);
+  --primary-border:     rgba(255, 51, 102, 0.35);
+
+  /* Secondary Brand — Electric Violet */
+  --secondary:          #8b5cf6;
+  --secondary-hover:    #9d75f7;
+  --secondary-light:    #1e1438;
+  --secondary-subtle:   rgba(139, 92, 246, 0.14);
+  --secondary-glow:     rgba(139, 92, 246, 0.35);
+
+  /* Accent 1 — Neon Tangerine */
+  --accent-orange:      #ff7700;
+  --accent-orange-light:#2c1503;
+  --accent-orange-glow: rgba(255, 119, 0, 0.35);
+
+  /* Accent 2 — Cyber Aqua / Teal */
+  --accent-aqua:        #00e5ff;
+  --accent-aqua-light:  #052329;
+  --accent-aqua-glow:   rgba(0, 229, 255, 0.35);
+
+  /* Accent 3 — Acid Lime */
+  --accent-lime:        #d4ff00;
+  --accent-lime-light:  #212800;
+  --accent-lime-text:   #d4ff00;
+  --accent-lime-glow:   rgba(212, 255, 0, 0.4);
+
+  /* Functional Status */
+  --success:            #10b981;
+  --success-light:      #052219;
+  --warning:            #f59e0b;
+  --warning-light:      #271b05;
+  --danger:             #f43f5e;
+  --danger-light:       #2a0a12;
+  --info:               #38bdf8;
+  --info-light:         #072233;
+
+  /* Typography Colors */
+  --text-primary:       #f8fafc;
+  --text-secondary:     #cbd5e1;
+  --text-muted:         #8193af;
+  --text-faint:         #475569;
+  --text-inverse:       #090c15;
+  --text-accent:        #ff3366;
+
+  /* Borders & Dividers */
+  --border-subtle:      #161d2e;
+  --border-default:     #1e293b;
+  --border-strong:      #2d3b55;
+  --border-focus:       rgba(255, 51, 102, 0.6);
+
+  /* Dark Gradients */
+  --gradient-dark:      linear-gradient(180deg, rgba(9,12,21,0.95) 0%, rgba(9,12,21,0.99) 100%);
+  --gradient-surface:   linear-gradient(180deg, rgba(21,28,48,0.9) 0%, rgba(16,21,36,0.9) 100%);
+
+  /* Dark Shadows */
+  --shadow-xs:          0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm:          0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md:          0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg:          0 16px 40px rgba(0, 0, 0, 0.7);
+  --shadow-xl:          0 28px 64px rgba(0, 0, 0, 0.85);
+  --shadow-card-hover:  0 20px 48px rgba(0, 0, 0, 0.75), 0 0 20px rgba(255, 51, 102, 0.15);
+  --shadow-primary:     0 8px 28px rgba(255, 51, 102, 0.45);
+  --shadow-violet:      0 8px 28px rgba(139, 92, 246, 0.4);
+}
+
+/* ----------------------------------------------------------------
+   3. Base Reset & Defaults
+   ---------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 16px);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-app);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: var(--text-5xl); font-weight: var(--weight-extrabold); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+h5 { font-size: var(--text-lg); }
+
+p {
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease);
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* Focus Visible Accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+/* Selection Color */
+::selection {
+  background-color: var(--primary);
+  color: #ffffff;
+}
+
+/* ----------------------------------------------------------------
+   4. Reusable Utility Classes & Design System Components
+   ---------------------------------------------------------------- */
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: var(--max-content-w);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--sp-6);
+  padding-right: var(--sp-6);
+}
+
+.container--reading {
+  max-width: var(--max-reading-w);
+}
+
+/* Gradient Text */
+.text-gradient {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-sunset {
+  background: var(--gradient-sunset);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-lime {
+  background: var(--gradient-lime);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glassmorphism Surface */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--bg-glass-border);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--r-xl);
+}
+
+.glass-panel--strong {
+  background: var(--bg-glass-strong);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--border-default);
+}
+
+/* Pill Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 4px 10px;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--r-full);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.badge--primary {
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+}
+
+.badge--secondary {
+  background: var(--secondary-light);
+  color: var(--secondary);
+}
+
+.badge--lime {
+  background: var(--accent-lime);
+  color: #1a2200;
+  font-weight: var(--weight-bold);
+}
+
+.badge--aqua {
+  background: var(--accent-aqua-light);
+  color: #00818d;
+}
+
+.badge--dark {
+  background: var(--bg-surface-sunken);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: 12px 24px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--r-full);
+  transition: all var(--t-fast) var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-primary);
+}
+
+.btn--primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(255, 42, 109, 0.4);
+}
+
+.btn--primary:active {
+  transform: translateY(0);
+}
+
+.btn--gradient {
+  background: var(--gradient-sunset);
+  color: #ffffff;
+  box-shadow: var(--shadow-primary);
+}
+
+.btn--gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(255, 42, 109, 0.45);
+}
+
+.btn--secondary {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn--secondary:hover {
+  background: var(--bg-surface-sunken);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.btn--outline-brand {
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+}
+
+.btn--outline-brand:hover {
+  background: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.btn--sm {
+  padding: 8px 16px;
+  font-size: var(--text-xs);
+}
+
+.btn--lg {
+  padding: 16px 32px;
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+}
+
+/* Interactive Cards */
+.card-interactive {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--t-normal) var(--ease);
+  overflow: hidden;
+}
+
+.card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--primary-border);
+}
+
+/* Visibility and Helper Utilities */
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Micro-animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes float-subtle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-float {
+  animation: float-subtle 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Reduced Motion Mode */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

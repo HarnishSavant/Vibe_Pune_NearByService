@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-tileserv
+  labels:
+    app.kubernetes.io/name: vibepune
+    app.kubernetes.io/component: tileserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-tileserv
+  template:
+    metadata:
+      labels:
+        app: pg-tileserv
+    spec:
+      containers:
+        - name: pg-tileserv
+          image: pramsey/pg_tileserv:latest
+          ports:
+            - containerPort: 7800
+              name: http
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://vibepune_user:root@postgis-service:5432/vibepune"
+          livenessProbe:
+            httpGet:
+              path: /index.json
+              port: 7800
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /index.json
+              port: 7800
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pg-tileserv-service
+  labels:
+    app.kubernetes.io/name: vibepune
+    app.kubernetes.io/component: tileserver
+spec:
+  ports:
+    - port: 7800
+      targetPort: 7800
+      name: http
+  selector:
+    app: pg-tileserv

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <title>What's Your Vibe? — VibePune AI Matcher</title>
+  <meta name="description" content="Answer 5 quick lifestyle questions and let Google Gemini AI match your mood with 8,139 verified spots in Pune." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Design System & Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css?v=23" />
+  <link rel="stylesheet" href="css/navigation.css?v=23" />
+  <link rel="stylesheet" href="css/pages.css?v=23" />
+</head>
+<body>
+
+  <!-- ═══ SHARED SITE HEADER ═══ -->
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="site-brand" aria-label="VibePune Homepage">
+        <div class="site-brand__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        <div class="site-brand__text-group">
+          <span class="site-brand__title">Vibe<span>Pune</span></span>
+          <span class="site-brand__pill">AI VIBE</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="index.html" class="site-nav__link">Home</a>
+        <a href="discover.html" class="site-nav__link">Map</a>
+        <a href="vibe.html" class="site-nav__link is-active">Vibe ✨</a>
+        <a href="events.html" class="site-nav__link">Events</a>
+        <a href="insights.html" class="site-nav__link">Insights</a>
+        <a href="saved.html" class="site-nav__link">Saved</a>
+        <a href="about.html" class="site-nav__link">About</a>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="site-header__actions">
+        <a href="saved.html" class="header-icon-btn" title="Saved Places" aria-label="View saved places">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="header-counter-badge hidden" id="saved-badge">0</span>
+        </a>
+
+        <button class="header-icon-btn btn-theme-toggle" id="btn-theme-toggle" title="Toggle Theme" aria-label="Toggle theme">
+          <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon-dark hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <a href="discover.html" class="header-cta-btn">
+          <span>Explore Map</span> ⚡
+        </a>
+
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open mobile navigation">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ AMBIENT ATMOSPHERE BACKDROP ═══ -->
+  <div class="vibe-atmosphere-backdrop" aria-hidden="true">
+    <div class="vibe-backdrop-image"></div>
+    <div class="vibe-orb vibe-orb--1"></div>
+    <div class="vibe-orb vibe-orb--2"></div>
+    <div class="vibe-orb vibe-orb--3"></div>
+    <div class="vibe-orb vibe-orb--4"></div>
+  </div>
+
+  <!-- ═══ MAIN VIBE QUIZ PAGE ═══ -->
+  <main class="quiz-page-container">
+    
+    <!-- Title Section -->
+    <div style="text-align:center; margin-bottom: 32px; position:relative; z-index:1;">
+      <span class="badge badge--primary" style="margin-bottom:12px; box-shadow:0 0 16px var(--primary-glow);">✨ Google Gemini + PostGIS Matcher</span>
+      <h1 style="font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight:var(--weight-black); letter-spacing:-0.02em;">What's Your Vibe Today?</h1>
+      <p style="color:var(--text-secondary); max-width:540px; margin: 8px auto 0; font-size:var(--text-base);">Answer 5 quick preferences to discover tailored Pune spots matching your exact mood and radius.</p>
+    </div>
+
+    <!-- Stepper Card -->
+    <div class="quiz-card" id="quiz-card">
+      <!-- Progress Bar -->
+      <div class="quiz-stepper-header">
+        <div class="quiz-step-progress">
+          <div class="quiz-progress-track">
+            <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 20%;"></div>
+          </div>
+          <span class="quiz-step-label" id="quiz-step-label">Step 1 of 5</span>
+        </div>
+      </div>
+
+      <!-- Question 1: Companions -->
+      <div class="quiz-step-view" data-step="1">
+        <h2 class="quiz-question-title">Who are you heading out with?</h2>
+        <p class="quiz-question-sub">Select your company for today's exploration.</p>
+        <div class="quiz-options-grid" data-group="companions" style="margin-top:20px;">
+          <button type="button" class="quiz-chip-btn is-selected" data-value="solo"><span class="quiz-chip-btn__icon">🧘</span><span>Solo Explorer</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="partner"><span class="quiz-chip-btn__icon">❤️</span><span>With Partner</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="friends"><span class="quiz-chip-btn__icon">👥</span><span>With Friends</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="family"><span class="quiz-chip-btn__icon">👨‍👩‍👧‍👦</span><span>With Family</span></button>
+        </div>
+      </div>
+
+      <!-- Question 2: Activity -->
+      <div class="quiz-step-view hidden" data-step="2">
+        <h2 class="quiz-question-title">What do you feel like doing?</h2>
+        <p class="quiz-question-sub">Choose one or more activities that excite you.</p>
+        <div class="quiz-options-grid" data-group="activities" style="margin-top:20px;">
+          <button type="button" class="quiz-chip-btn is-selected" data-value="coffee"><span class="quiz-chip-btn__icon">☕</span><span>Chill & Coffee</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="food"><span class="quiz-chip-btn__icon">🍽️</span><span>Foodie & Dining</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="nightlife"><span class="quiz-chip-btn__icon">🍸</span><span>Night Out & Pubs</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="nature"><span class="quiz-chip-btn__icon">🌿</span><span>Nature & Greenery</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="fitness"><span class="quiz-chip-btn__icon">🏃</span><span>Active & Sports</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="shopping"><span class="quiz-chip-btn__icon">🛍️</span><span>Shopping & Malls</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="arts"><span class="quiz-chip-btn__icon">🎨</span><span>Arts & Heritage</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="adventure"><span class="quiz-chip-btn__icon">📸</span><span>Scenic Views</span></button>
+        </div>
+      </div>
+
+      <!-- Question 3: Mood -->
+      <div class="quiz-step-view hidden" data-step="3">
+        <h2 class="quiz-question-title">What's your mood today?</h2>
+        <p class="quiz-question-sub">Match the emotional energy of your outing.</p>
+        <div class="quiz-options-grid" data-group="moods" style="margin-top:20px;">
+          <button type="button" class="quiz-chip-btn is-selected" data-value="relaxed"><span class="quiz-chip-btn__icon">☕</span><span>Relaxed & Calm</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="romantic"><span class="quiz-chip-btn__icon">🌹</span><span>Romantic & Cozy</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="energetic"><span class="quiz-chip-btn__icon">⚡</span><span>High Energy</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="social"><span class="quiz-chip-btn__icon">🎉</span><span>Social & Fun</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="creative"><span class="quiz-chip-btn__icon">💡</span><span>Creative & Study</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="adventurous"><span class="quiz-chip-btn__icon">🌄</span><span>Adventurous</span></button>
+        </div>
+      </div>
+
+      <!-- Question 4: Setting & Budget -->
+      <div class="quiz-step-view hidden" data-step="4">
+        <h2 class="quiz-question-title">Setting & Budget Preferences</h2>
+        <p class="quiz-question-sub">Select environment type and comfort spending tier.</p>
+        
+        <h4 style="font-size:var(--text-sm); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin:20px 0 10px;">Environment</h4>
+        <div class="quiz-options-grid" data-group="environment" data-single="true">
+          <button type="button" class="quiz-chip-btn is-selected" data-value="either"><span>Either / Any</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="indoor"><span class="quiz-chip-btn__icon">🏛️</span><span>Indoor / AC</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="outdoor"><span class="quiz-chip-btn__icon">🌳</span><span>Outdoor / Open Air</span></button>
+        </div>
+
+        <h4 style="font-size:var(--text-sm); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin:24px 0 10px;">Budget Tier</h4>
+        <div class="quiz-options-grid" data-group="budget" data-single="true">
+          <button type="button" class="quiz-chip-btn is-selected" data-value="any"><span>Any Budget</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="free"><span>Free Spots</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="low"><span>Budget (₹)</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="medium"><span>Moderate (₹₹)</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="premium"><span>Luxe (₹₹₹)</span></button>
+        </div>
+      </div>
+
+      <!-- Question 5: Distance & Natural Description -->
+      <div class="quiz-step-view hidden" data-step="5">
+        <h2 class="quiz-question-title">Maximum Distance & Custom Prompt</h2>
+        <p class="quiz-question-sub">Describe your dream spot in plain English for Google Gemini to parse.</p>
+
+        <h4 style="font-size:var(--text-sm); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin:20px 0 10px;">Search Distance</h4>
+        <div class="quiz-options-grid" data-group="distance" data-single="true">
+          <button type="button" class="quiz-chip-btn" data-value="1"><span>1 km</span></button>
+          <button type="button" class="quiz-chip-btn is-selected" data-value="3"><span>3 km</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="5"><span>5 km</span></button>
+          <button type="button" class="quiz-chip-btn" data-value="10"><span>10 km</span></button>
+        </div>
+
+        <h4 style="font-size:var(--text-sm); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin:24px 0 10px;">Tell Gemini what you want (Optional)</h4>
+        <textarea
+          id="quiz-free-text"
+          class="quiz-textarea"
+          placeholder="e.g. A quiet aesthetic cafe with good coffee, cozy reading nooks, and fast Wi-Fi in Koregaon Park..."
+        ></textarea>
+      </div>
+
+      <!-- Stepper Actions Bar -->
+      <div class="quiz-footer-actions">
+        <button type="button" class="btn btn--secondary hidden" id="btn-quiz-prev">← Back</button>
+        <div style="display:flex; gap:12px; margin-left:auto;">
+          <button type="button" class="btn btn--secondary" id="btn-quiz-skip">Skip</button>
+          <button type="button" class="btn btn--primary" id="btn-quiz-forward">Next →</button>
+          <button type="button" class="btn btn--gradient hidden" id="btn-quiz-execute">Find My Vibe ✨</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations Loading State with Futuristic AI Radar Scanner -->
+    <div id="vibe-loading" class="vibe-scanner-card hidden">
+      <div class="vibe-radar-scanner">
+        <div class="vibe-radar-ring ring--1"></div>
+        <div class="vibe-radar-ring ring--2"></div>
+        <div class="vibe-radar-ring ring--3"></div>
+        <div class="vibe-radar-sweep"></div>
+        <div class="vibe-radar-core">
+          <span class="vibe-radar-icon">🧠</span>
+        </div>
+      </div>
+      <div class="vibe-scanner-text-group">
+        <h3 class="vibe-scanner-title">Synthesizing Your Vibe...</h3>
+        <p class="vibe-scanner-status" id="vibe-scanner-status">Interpreting mood & companion dynamics with Gemini...</p>
+        <div class="vibe-scanner-progress-bar">
+          <div class="vibe-scanner-progress-inner" id="vibe-scanner-progress-inner"></div>
+        </div>
+        <span class="vibe-scanner-meta">Querying 8,139 PostGIS coordinates across Pune</span>
+      </div>
+    </div>
+
+    <!-- Recommendations Results View -->
+    <div id="vibe-results-view" class="hidden">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <span class="badge badge--lime" style="margin-bottom:6px;">✨ Personalized Matches</span>
+          <h2 style="font-size:1.8rem; font-weight:var(--weight-bold);">Curated Spots For You</h2>
+          <p id="recs-count-label" style="color:var(--text-secondary); font-size:14px;">Showing top evidence-grounded recommendations.</p>
+        </div>
+        <button type="button" class="btn btn--secondary btn--sm" id="btn-retake-quiz">↻ Retake Quiz</button>
+      </div>
+
+      <div class="recs-container" id="recs-cards-list"></div>
+    </div>
+
+  </main>
+
+  <!-- ═══ SHARED SITE FOOTER ═══ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__bottom">
+        <div>© 2026 <strong>VibePune</strong>. Academic WebGIS Project for Pune, Maharashtra.</div>
+        <div class="site-footer__attribution">Data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop">
+    <div class="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <div class="site-brand">
+          <div class="site-brand__icon">⚡</div>
+          <div class="site-brand__text-group">
+            <span class="site-brand__title">Vibe<span>Pune</span></span>
+          </div>
+        </div>
+        <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation">✕</button>
+      </div>
+
+      <nav class="mobile-nav-links">
+        <a href="index.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🏠</span><span>Home</span></a>
+        <a href="discover.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🗺️</span><span>Discover Map</span></a>
+        <a href="vibe.html" class="mobile-nav-link is-active"><span class="mobile-nav-link__icon">✨</span><span>Find Your Vibe</span></a>
+        <a href="events.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🎟️</span><span>Pune Events</span></a>
+        <a href="insights.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">📊</span><span>Spatial Insights</span></a>
+        <a href="saved.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">❤️</span><span>Saved Places</span></a>
+        <a href="about.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">📖</span><span>About & Vision</span></a>
+      </nav>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+
+  <!-- Scripts -->
+  <script src="js/config.js?v=23"></script>
+  <script src="js/api.js?v=23"></script>
+  <script src="js/nav.js?v=23"></script>
+  <script src="js/vibe-page.js?v=23"></script>
+</body>
+</html>

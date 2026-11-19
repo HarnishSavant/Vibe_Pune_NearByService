@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <title>Pune Live & Upcoming Events — VibePune</title>
+  <meta name="description" content="Discover verified cultural happenings, musical nights, workshops and sports events across Pune with spatial proximity filtering." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Design System & Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css?v=23" />
+  <link rel="stylesheet" href="css/navigation.css?v=23" />
+  <link rel="stylesheet" href="css/pages.css?v=23" />
+</head>
+<body>
+
+  <!-- ═══ SHARED SITE HEADER ═══ -->
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="site-brand" aria-label="VibePune Homepage">
+        <div class="site-brand__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        <div class="site-brand__text-group">
+          <span class="site-brand__title">Vibe<span>Pune</span></span>
+          <span class="site-brand__pill">EVENTS</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="index.html" class="site-nav__link">Home</a>
+        <a href="discover.html" class="site-nav__link">Map</a>
+        <a href="vibe.html" class="site-nav__link">Vibe ✨</a>
+        <a href="events.html" class="site-nav__link is-active">Events</a>
+        <a href="insights.html" class="site-nav__link">Insights</a>
+        <a href="saved.html" class="site-nav__link">Saved</a>
+        <a href="about.html" class="site-nav__link">About</a>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="site-header__actions">
+        <a href="saved.html" class="header-icon-btn" title="Saved Places" aria-label="View saved places">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="header-counter-badge hidden" id="saved-badge">0</span>
+        </a>
+
+        <button class="header-icon-btn btn-theme-toggle" id="btn-theme-toggle" title="Toggle Theme" aria-label="Toggle theme">
+          <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon-dark hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <a href="discover.html" class="header-cta-btn">
+          <span>Explore Map</span> ⚡
+        </a>
+
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open mobile navigation">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ MAIN EVENTS CONTENT ═══ -->
+  <main class="container">
+    <div class="events-page-header">
+      <span class="badge badge--secondary" style="margin-bottom:12px;">🎟️ Spatial Cultural Feed</span>
+      <h1 style="font-size:clamp(2.2rem, 5vw, 3.25rem); font-weight:var(--weight-black);">Pune Events & Happenings</h1>
+      <p style="color:var(--text-secondary); max-width:600px; margin: 8px auto 0;">Explore curated live music, food festivals, open mics, and heritage walks with temporal and spatial proximity awareness.</p>
+
+      <!-- Temporal Filter Pills -->
+      <div class="events-filter-bar">
+        <button type="button" class="btn btn--sm btn--primary event-filter-pill is-selected" data-timeframe="all">All Upcoming</button>
+        <button type="button" class="btn btn--sm btn--secondary event-filter-pill" data-timeframe="today">Today</button>
+        <button type="button" class="btn btn--sm btn--secondary event-filter-pill" data-timeframe="tomorrow">Tomorrow</button>
+        <button type="button" class="btn btn--sm btn--secondary event-filter-pill" data-timeframe="this_weekend">This Weekend</button>
+        <button type="button" class="btn btn--sm btn--secondary event-filter-pill" data-timeframe="next_7_days">Next 7 Days</button>
+      </div>
+    </div>
+
+    <!-- Events Grid Container -->
+    <div id="events-loading" style="text-align:center; padding: 40px;">
+      <p style="color:var(--text-muted);">Loading verified Pune events...</p>
+    </div>
+
+    <div class="events-grid" id="events-grid"></div>
+
+    <!-- Data Transparency Notice -->
+    <div style="background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--r-xl); padding:20px 24px; margin-bottom:48px; display:flex; align-items:center; gap:16px;">
+      <span style="font-size:1.8rem;">💡</span>
+      <div style="font-size:13px; color:var(--text-secondary); line-height:1.5;">
+        <strong>Academic Demonstration & Verified Records Notice:</strong> Events displayed on VibePune are verified against local venue schedules or curated as demonstration datasets for academic WebGIS spatial analysis. No event data is fabricated for marketing purposes.
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══ SHARED SITE FOOTER ═══ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__bottom">
+        <div>© 2026 <strong>VibePune</strong>. Academic WebGIS Project for Pune, Maharashtra.</div>
+        <div class="site-footer__attribution">Data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop">
+    <div class="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <div class="site-brand">
+          <div class="site-brand__icon">⚡</div>
+          <div class="site-brand__text-group">
+            <span class="site-brand__title">Vibe<span>Pune</span></span>
+          </div>
+        </div>
+        <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation">✕</button>
+      </div>
+
+      <nav class="mobile-nav-links">
+        <a href="index.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🏠</span><span>Home</span></a>
+        <a href="discover.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🗺️</span><span>Discover Map</span></a>
+        <a href="vibe.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">✨</span><span>Find Your Vibe</span></a>
+        <a href="events.html" class="mobile-nav-link is-active"><span class="mobile-nav-link__icon">🎟️</span><span>Pune Events</span></a>
+        <a href="insights.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">📊</span><span>Spatial Insights</span></a>
+        <a href="saved.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">❤️</span><span>Saved Places</span></a>
+        <a href="about.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">📖</span><span>About & Vision</span></a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js?v=20"></script>
+  <script src="js/api.js?v=20"></script>
+  <script src="js/nav.js?v=20"></script>
+  <script src="js/events-page.js?v=20"></script>
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <title>VibePune — Find Your Vibe. Explore Pune.</title>
+  <meta name="description" content="Discover 8,139 verified spots in Pune across 57 lifestyle vibes. Interactive PostGIS WebGIS, AI recommendations, live events & turn-by-turn routing." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Design System & Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css?v=23" />
+  <link rel="stylesheet" href="css/navigation.css?v=23" />
+  <link rel="stylesheet" href="css/pages.css?v=23" />
+</head>
+<body>
+
+  <!-- ═══ SHARED SITE HEADER ═══ -->
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="site-brand" aria-label="VibePune Homepage">
+        <div class="site-brand__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        <div class="site-brand__text-group">
+          <h1 class="site-brand__title">Vibe<span>Pune</span></h1>
+          <span class="site-brand__pill">MH-12</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="index.html" class="site-nav__link is-active">Home</a>
+        <a href="discover.html" class="site-nav__link">Map</a>
+        <a href="maplibre.html" class="site-nav__link">Vector Map (MapLibre)</a>
+        <a href="vibe.html" class="site-nav__link">Vibe ✨</a>
+        <a href="events.html" class="site-nav__link">Events</a>
+        <a href="insights.html" class="site-nav__link">Insights</a>
+        <a href="saved.html" class="site-nav__link">Saved</a>
+        <a href="about.html" class="site-nav__link">About</a>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="site-header__actions">
+        <!-- Saved Places Counter -->
+        <a href="saved.html" class="header-icon-btn" title="Saved Places" aria-label="View saved places">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="header-counter-badge hidden" id="saved-badge">0</span>
+        </a>
+
+        <!-- Dark/Light Mode Switcher -->
+        <button class="header-icon-btn btn-theme-toggle" id="btn-theme-toggle" title="Toggle Theme" aria-label="Toggle theme">
+          <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon-dark hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- CTA Button -->
+        <a href="discover.html" class="header-cta-btn">
+          <span>Explore Map</span> ⚡
+        </a>
+
+        <!-- Mobile Menu Hamburger -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open mobile navigation">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ MAIN LANDING CONTENT ═══ -->
+  <main>
+
+    <!-- 1. HERO SECTION -->
+    <section class="hero-landing">
+      <div class="hero-landing__glow"></div>
+      
+      <div class="container hero-landing__content">
+        <div class="hero-pill-badge">
+          <span class="hero-pill-badge__dot"></span>
+          <span>8,139 Validated Spots • PostGIS Powered • Gemini AI</span>
+        </div>
+
+        <h1 class="hero-landing__title">
+          Find your <span class="text-gradient">vibe in Pune.</span>
+        </h1>
+
+        <p class="hero-landing__subtitle">
+          The next-generation WebGIS lifestyle discovery platform for Pune. Discover hidden cafes on FC Road, electric nightlife in Koregaon Park, peaceful ghats, and cultural heritage — with spatial precision and zero fake reviews.
+        </p>
+
+        <!-- Live Instant Search Bar -->
+        <div class="hero-search-wrap">
+          <form class="hero-search-bar" action="discover.html" method="GET">
+            <svg class="hero-search-bar__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              name="search"
+              class="hero-search-bar__input"
+              placeholder="Search spots, vibes, neighborhoods (e.g. coffee, FC Road)..."
+              autocomplete="off"
+            />
+            <button type="submit" class="hero-search-bar__btn">
+              <span>Search</span> →
+            </button>
+          </form>
+        </div>
+
+        <!-- Quick Tag Shortcuts -->
+        <div class="hero-tags">
+          <span class="hero-tags__label">Trending:</span>
+          <a href="discover.html?search=Aesthetic%20Cafe" class="hero-tag-chip">☕ Aesthetic Cafes</a>
+          <a href="discover.html?cat=dining" class="hero-tag-chip">🍕 Late Night Dining</a>
+          <a href="discover.html?search=Koregaon%20Park" class="hero-tag-chip">🍸 Koregaon Park</a>
+          <a href="discover.html?cat=heritage" class="hero-tag-chip">🛕 Heritage & Forts</a>
+          <a href="discover.html?search=FC%20Road" class="hero-tag-chip">🛍️ FC Road Street Bites</a>
+          <a href="discover.html?cat=park" class="hero-tag-chip">🌿 Nature & Chill</a>
+        </div>
+
+        <!-- Action CTAs -->
+        <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:12px;">
+          <a href="discover.html" class="btn btn--gradient btn--lg">
+            <span>Explore Interactive Map</span> 🗺️
+          </a>
+          <a href="vibe.html" class="btn btn--secondary btn--lg">
+            <span>Take Vibe Quiz</span> ✨
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. STATS PULSE BAR -->
+    <section class="stats-bar-section">
+      <div class="container stats-grid">
+        <div class="stat-item">
+          <span class="stat-item__value">8,139<span>+</span></span>
+          <span class="stat-item__label">Verified Spots</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__value">57</span>
+          <span class="stat-item__label">Lifestyle Vibes</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__value">13</span>
+          <span class="stat-item__label">Iconic Neighborhoods</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__value">100<span>%</span></span>
+          <span class="stat-item__label">PostGIS Indexed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. CURATED NEIGHBORHOOD COLLECTIONS -->
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-head__tag">Neighborhood Guides</span>
+          <h2 class="section-head__title">Iconic Pune Enclaves</h2>
+          <p class="section-head__desc">From heritage lanes to modern tech corridors, dive into the unique energy of Pune’s distinct areas.</p>
+        </div>
+
+        <div class="neighborhoods-grid">
+          <!-- Koregaon Park -->
+          <a href="discover.html?search=Koregaon%20Park" class="neighborhood-card">
+            <div class="neighborhood-card__bg" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="neighborhood-card__overlay"></div>
+            <div class="neighborhood-card__content">
+              <span class="neighborhood-card__badge">Cafes & Nightlife</span>
+              <h3 class="neighborhood-card__name">Koregaon Park</h3>
+              <p class="neighborhood-card__desc">Leafy avenues, German Bakery, rooftop lounges, and bohemian cultural spots.</p>
+            </div>
+          </a>
+
+          <!-- FC Road & Deccan -->
+          <a href="discover.html?search=FC%20Road" class="neighborhood-card">
+            <div class="neighborhood-card__bg" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="neighborhood-card__overlay"></div>
+            <div class="neighborhood-card__content">
+              <span class="neighborhood-card__badge">Youth & Street Culture</span>
+              <h3 class="neighborhood-card__name">FC Road & Deccan</h3>
+              <p class="neighborhood-card__desc">Fergusson College heritage, bustling bookstores, Vaishali, and legendary street food.</p>
+            </div>
+          </a>
+
+          <!-- Baner & High Street -->
+          <a href="discover.html?search=Baner" class="neighborhood-card">
+            <div class="neighborhood-card__bg" style="background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="neighborhood-card__overlay"></div>
+            <div class="neighborhood-card__content">
+              <span class="neighborhood-card__badge">Breweries & Dining</span>
+              <h3 class="neighborhood-card__name">Baner & Balewadi</h3>
+              <p class="neighborhood-card__desc">Craft microbreweries, cosmopolitan open-air dining, and high-energy weekend vibes.</p>
+            </div>
+          </a>
+
+          <!-- Viman Nagar -->
+          <a href="discover.html?search=Viman%20Nagar" class="neighborhood-card">
+            <div class="neighborhood-card__bg" style="background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="neighborhood-card__overlay"></div>
+            <div class="neighborhood-card__content">
+              <span class="neighborhood-card__badge">Shopping & Chill</span>
+              <h3 class="neighborhood-card__name">Viman Nagar</h3>
+              <p class="neighborhood-card__desc">Phoenix Marketcity, coffee roasters, vibrant student lounges, and airport proximity.</p>
+            </div>
+          </a>
+
+          <!-- Camp & MG Road -->
+          <a href="discover.html?search=Camp" class="neighborhood-card">
+            <div class="neighborhood-card__bg" style="background-image: url('https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="neighborhood-card__overlay"></div>
+            <div class="neighborhood-card__content">
+              <span class="neighborhood-card__badge">Heritage & Bakeries</span>
+              <h3 class="neighborhood-card__name">Camp (MG Road)</h3>
+              <p class="neighborhood-card__desc">Kayani Bakery Shrewsbury biscuits, colonial streetscapes, and classic Irani chai.</p>
+            </div>
+          </a>
+
+          <!-- Kothrud & Heritage -->
+          <a href="discover.html?search=Kothrud" class="neighborhood-card">
+            <div class="neighborhood-card__bg" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="neighborhood-card__overlay"></div>
+            <div class="neighborhood-card__content">
+              <span class="neighborhood-card__badge">Culture & Nature</span>
+              <h3 class="neighborhood-card__name">Kothrud & Parvati</h3>
+              <p class="neighborhood-card__desc">Traditional Maharashtrian delicacies, Yashwantrao Chavan Natyagruha, and hill views.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. HOW IT WORKS (SPATIAL & AI INTELLIGENCE) -->
+    <section class="section-pad" style="background: var(--bg-surface);">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-head__tag">Spatial Architecture</span>
+          <h2 class="section-head__title">How VibePune Works</h2>
+          <p class="section-head__desc">We bridged high-performance PostGIS spatial algorithms with generative NLP so you discover places that genuinely fit your mood.</p>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <span class="step-card__num">01</span>
+            <h3 class="step-card__title">Spatial Indexing & GIS</h3>
+            <p class="step-card__desc">Over 8,139 Pune landmarks and local venues verified via OpenStreetMap, with PostGIS GiST R-Tree indexing for sub-10ms ellipsoidal distance queries.</p>
+            <div style="margin-top:auto;"><span class="badge badge--aqua">ST_DWithin • PostGIS</span></div>
+          </div>
+
+          <div class="step-card">
+            <span class="step-card__num">02</span>
+            <h3 class="step-card__title">Natural Vibe Matching</h3>
+            <p class="step-card__desc">Our 5-step questionnaire uses Google Gemini 1.5 Pro to extract semantic intent from natural descriptions, backed by a 100% resilient deterministic fallback.</p>
+            <div style="margin-top:auto;"><span class="badge badge--primary">Gemini 1.5 Pro NLP</span></div>
+          </div>
+
+          <div class="step-card">
+            <span class="step-card__num">03</span>
+            <h3 class="step-card__title">Multimodal Routing</h3>
+            <p class="step-card__desc">Real turn-by-turn road geometries calculated on-the-fly via OSRM for walking and driving, coupled with seamless Google Maps navigation handoff.</p>
+            <div style="margin-top:auto;"><span class="badge badge--lime">OSRM Engine • Turn-by-Turn</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. WHY VIBEPUNE? (TRANSPARENT COMPARISON) -->
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-head__tag">Data Honesty Guarantee</span>
+          <h2 class="section-head__title">Why VibePune is Different</h2>
+          <p class="section-head__desc">Commercial apps push sponsored algorithms. VibePune delivers pure geographic discovery.</p>
+        </div>
+
+        <div class="comparison-table-wrap">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Feature / Principle</th>
+                <th style="color:var(--primary); font-size:14px;">VibePune (Our Platform)</th>
+                <th>Traditional Review Apps</th>
+                <th>Standard Maps</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Sponsored Pay-to-Rank Ads</strong></td>
+                <td><span class="check-green">❌ Never — 100% Organic</span></td>
+                <td><span class="cross-red">⚠️ Heavy Sponsored Ads</span></td>
+                <td><span class="cross-red">⚠️ Promoted Pins</span></td>
+              </tr>
+              <tr>
+                <td><strong>Data Provenance</strong></td>
+                <td><span class="check-green">OpenStreetMap Verified Data</span></td>
+                <td>Unverified Scraped Data</td>
+                <td>Proprietary Closed Database</td>
+              </tr>
+              <tr>
+                <td><strong>Real GIS Spatial Analytics</strong></td>
+                <td><span class="check-green">✅ Concentric 500m-5km Buffers</span></td>
+                <td>❌ None</td>
+                <td>❌ None</td>
+              </tr>
+              <tr>
+                <td><strong>AI Natural Vibe Understanding</strong></td>
+                <td><span class="check-green">✅ Gemini NLP + Fallback</span></td>
+                <td>❌ Keyword Match Only</td>
+                <td>❌ Keyword Match Only</td>
+              </tr>
+              <tr>
+                <td><strong>Data Fabrications (Fake Reviews)</strong></td>
+                <td><span class="check-green">❌ Zero Fabricated Stats</span></td>
+                <td><span class="cross-red">⚠️ Bot Reviews Prevalent</span></td>
+                <td>Varied Quality</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. FINAL IMMERSIVE CTA -->
+    <section class="section-pad" style="background: var(--bg-surface); text-align:center;">
+      <div class="container container--reading" style="display:flex; flex-direction:column; align-items:center; gap:20px;">
+        <span class="badge badge--lime">✨ Your Pune Journey Starts Here</span>
+        <h2 style="font-size:clamp(2.2rem, 4vw, 3.25rem); font-weight:var(--weight-black);">Ready to explore Pune?</h2>
+        <p style="font-size:1.15rem; color:var(--text-secondary);">Open the interactive WebGIS map, filter by your favorite vibe, or let our AI engine plan your day.</p>
+        <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:8px;">
+          <a href="discover.html" class="btn btn--gradient btn--lg">Open Live Map ⚡</a>
+          <a href="vibe.html" class="btn btn--secondary btn--lg">Find My Vibe ✨</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ SHARED EDITORIAL FOOTER ═══ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <!-- Col 1: Brand Info -->
+        <div class="site-footer__brand-block">
+          <div class="site-brand">
+            <div class="site-brand__icon">⚡</div>
+            <div class="site-brand__text-group">
+              <span class="site-brand__title">Vibe<span>Pune</span></span>
+              <span class="site-brand__pill">MH-12</span>
+            </div>
+          </div>
+          <p class="site-footer__tagline">
+            An intelligent geospatial discovery platform combining PostGIS spatial analysis, Google Gemini intent extraction, and modern consumer web aesthetics.
+          </p>
+          <div class="site-footer__badges">
+            <span class="footer-tech-pill">🐘 PostgreSQL 15</span>
+            <span class="footer-tech-pill">🌐 PostGIS 3.3</span>
+            <span class="footer-tech-pill">⚡ FastAPI</span>
+            <span class="footer-tech-pill">🗺️ Leaflet 1.9</span>
+            <span class="footer-tech-pill">🤖 Gemini AI</span>
+          </div>
+        </div>
+
+        <!-- Col 2: Navigation -->
+        <div>
+          <h4 class="site-footer__col-title">Navigation</h4>
+          <ul class="site-footer__list">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="discover.html">Discover Map</a></li>
+            <li><a href="vibe.html">What's Your Vibe?</a></li>
+            <li><a href="events.html">Upcoming Events</a></li>
+            <li><a href="insights.html">Spatial Analytics</a></li>
+            <li><a href="saved.html">Saved Places</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Enclaves -->
+        <div>
+          <h4 class="site-footer__col-title">Neighborhoods</h4>
+          <ul class="site-footer__list">
+            <li><a href="discover.html?search=Koregaon%20Park">Koregaon Park</a></li>
+            <li><a href="discover.html?search=FC%20Road">FC Road & Deccan</a></li>
+            <li><a href="discover.html?search=Baner">Baner & Balewadi</a></li>
+            <li><a href="discover.html?search=Viman%20Nagar">Viman Nagar</a></li>
+            <li><a href="discover.html?search=Camp">Camp (MG Road)</a></li>
+            <li><a href="discover.html?search=Kothrud">Kothrud & Parvati</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Project & Legal -->
+        <div>
+          <h4 class="site-footer__col-title">About & Research</h4>
+          <ul class="site-footer__list">
+            <li><a href="about.html">Project Vision</a></li>
+            <li><a href="about.html#architecture">WebGIS Methodology</a></li>
+            <li><a href="about.html#provenance">Data Honesty Policy</a></li>
+            <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">Source Code ↗</a></li>
+            <li><a href="http://localhost:8000/docs" target="_blank" rel="noopener noreferrer">FastAPI OpenAPI Docs ↗</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="site-footer__bottom">
+        <div>
+          © 2026 <strong>VibePune</strong>. Academic WebGIS Project for Pune, Maharashtra.
+        </div>
+        <div class="site-footer__attribution">
+          Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a> (ODbL). Tiles © <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop">
+    <div class="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <div class="site-brand">
+          <div class="site-brand__icon">⚡</div>
+          <div class="site-brand__text-group">
+            <span class="site-brand__title">Vibe<span>Pune</span></span>
+          </div>
+        </div>
+        <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation">✕</button>
+      </div>
+
+      <nav class="mobile-nav-links">
+        <a href="index.html" class="mobile-nav-link is-active"><span class="mobile-nav-link__icon">🏠</span><span>Home</span></a>
+        <a href="discover.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🗺️</span><span>Discover Map</span></a>
+        <a href="vibe.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">✨</span><span>Find Your Vibe</span></a>
+        <a href="events.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🎟️</span><span>Pune Events</span></a>
+        <a href="insights.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">📊</span><span>Spatial Insights</span></a>
+        <a href="saved.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">❤️</span><span>Saved Places</span></a>
+        <a href="about.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">📖</span><span>About & Vision</span></a>
+      </nav>
+
+      <div class="mobile-nav-footer">
+        <div class="badge badge--lime">⚡ 8,139 PostGIS POIs Active</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared Navigation Script -->
+  <script src="js/nav.js?v=20"></script>
+</body>
+</html>

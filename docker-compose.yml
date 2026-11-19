@@ -1,0 +1,120 @@
+version: '3.9'
+
+# ============================================================
+# VibePune — Docker Compose Orchestration (Stage 8)
+# ============================================================
+# Services:
+# 1. db: PostgreSQL 16 + PostGIS 3.4
+# 2. geoserver: GeoServer 2.24.1 OGC WMS/WFS
+# 3. pg_tileserv: Mapbox Vector Tile (MVT) Server
+# 4. pg_featureserv: OGC API Features Server
+# Shared Network: vibepune-net
+# Hostnames: db, geoserver, pg_tileserv, pg_featureserv
+# ============================================================
+
+services:
+
+  # 1. PostgreSQL 16 + PostGIS 3.4
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: vibepune-db
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vibepune_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+      POSTGRES_DB: ${POSTGRES_DB:-vibepune}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init/01_extensions.sql:/docker-entrypoint-initdb.d/01_extensions.sql:ro
+      - ./database/init/02_schema.sql:/docker-entrypoint-initdb.d/02_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vibepune_user} -d ${POSTGRES_DB:-vibepune}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - vibepune-net
+
+  # 2. GeoServer 2.24 OGC WMS/WFS
+  geoserver:
+    image: docker.osgeo.org/geoserver:2.24.1
+    container_name: vibepune-geoserver
+    restart: unless-stopped
+    ports:
+      - "${GEOSERVER_PORT:-8085}:8080"
+    environment:
+      - INSTALL_EXTENSIONS=true
+      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER:-admin}
+      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD:-geoserver}
+      - GEOSERVER_LOG_LOCATION=/opt/geoserver_data/logs/geoserver.log
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - geoserver_data:/opt/geoserver_data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/geoserver/web/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    networks:
+      - vibepune-net
+
+  # 3. pg_tileserv (PostGIS Vector Tiles)
+  pg_tileserv:
+    image: pramsey/pg_tileserv:latest
+    container_name: vibepune-pg-tileserv
+    restart: unless-stopped
+    ports:
+      - "${PG_TILESERV_PORT:-7800}:7800"
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-vibepune_user}:${POSTGRES_PASSWORD:-root}@db:5432/${POSTGRES_DB:-vibepune}"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:7800/index.json"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - vibepune-net
+
+  # 4. pg_featureserv (OGC API Features)
+  pg_featureserv:
+    image: pramsey/pg_featureserv:latest
+    container_name: vibepune-pg-featureserv
+    restart: unless-stopped
+    ports:
+      - "${PG_FEATURESERV_PORT:-9000}:9000"
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-vibepune_user}:${POSTGRES_PASSWORD:-root}@db:5432/${POSTGRES_DB:-vibepune}"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9000/collections.json"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - vibepune-net
+
+networks:
+  vibepune-net:
+    driver: bridge
+    name: vibepune-net
+
+volumes:
+  postgres_data:
+    name: vibepune_postgres_data
+    driver: local
+  geoserver_data:
+    name: vibepune_geoserver_data
+    driver: local

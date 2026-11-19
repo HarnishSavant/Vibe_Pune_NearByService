@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <title>Spatial Analytics & GIS Insights — VibePune</title>
+  <meta name="description" content="Urban accessibility diagnostics, concentric walking buffer analysis, and POI density distribution powered by PostgreSQL/PostGIS." />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Design System & Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css?v=23" />
+  <link rel="stylesheet" href="css/navigation.css?v=23" />
+  <link rel="stylesheet" href="css/pages.css?v=23" />
+</head>
+<body>
+
+  <!-- ═══ SHARED SITE HEADER ═══ -->
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="site-brand" aria-label="VibePune Homepage">
+        <div class="site-brand__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        <div class="site-brand__text-group">
+          <span class="site-brand__title">Vibe<span>Pune</span></span>
+          <span class="site-brand__pill">ANALYTICS</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="index.html" class="site-nav__link">Home</a>
+        <a href="discover.html" class="site-nav__link">Map</a>
+        <a href="vibe.html" class="site-nav__link">Vibe ✨</a>
+        <a href="events.html" class="site-nav__link">Events</a>
+        <a href="insights.html" class="site-nav__link is-active">Insights</a>
+        <a href="saved.html" class="site-nav__link">Saved</a>
+        <a href="about.html" class="site-nav__link">About</a>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="site-header__actions">
+        <a href="saved.html" class="header-icon-btn" title="Saved Places" aria-label="View saved places">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="header-counter-badge hidden" id="saved-badge">0</span>
+        </a>
+
+        <button class="header-icon-btn btn-theme-toggle" id="btn-theme-toggle" title="Toggle Theme" aria-label="Toggle theme">
+          <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon-dark hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <a href="discover.html" class="header-cta-btn">
+          <span>Explore Map</span> ⚡
+        </a>
+
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open mobile navigation">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ MAIN INSIGHTS CONTENT ═══ -->
+  <main class="container" style="padding-top: var(--sp-12); padding-bottom: var(--sp-16);">
+    <div style="text-align:center; max-width:720px; margin: 0 auto var(--sp-12);">
+      <span class="badge badge--aqua" style="margin-bottom:12px;">📊 PostGIS Geoprocessing Engine</span>
+      <h1 style="font-size:clamp(2.2rem, 5vw, 3.25rem); font-weight:var(--weight-black);">Pune Spatial Analytics</h1>
+      <p style="color:var(--text-secondary); margin-top:8px;">Live urban density metrics, walking accessibility decay functions, and category composition derived directly from our spatial database.</p>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="stats-grid" style="margin-bottom: var(--sp-12);">
+      <div class="stat-item glass-panel" style="padding:24px;">
+        <span class="stat-item__value" id="total-places-stat">8,139</span>
+        <span class="stat-item__label">Validated POI Records</span>
+      </div>
+      <div class="stat-item glass-panel" style="padding:24px;">
+        <span class="stat-item__value" id="total-categories-stat">57</span>
+        <span class="stat-item__label">Lifestyle Taxonomy Categories</span>
+      </div>
+      <div class="stat-item glass-panel" style="padding:24px;">
+        <span class="stat-item__value" id="total-events-stat">10</span>
+        <span class="stat-item__label">Verified Events Active</span>
+      </div>
+      <div class="stat-item glass-panel" style="padding:24px;">
+        <span class="stat-item__value" style="color:var(--success);">100%</span>
+        <span class="stat-item__label">PostGIS Topology Synced</span>
+      </div>
+    </div>
+
+    <!-- Analytics Widgets Grid -->
+    <div class="insights-grid">
+      
+      <!-- WIDGET 1: Category Distribution -->
+      <div class="insight-widget">
+        <div>
+          <span class="badge badge--primary">POI Distribution</span>
+          <h3 style="font-size:1.4rem; font-weight:var(--weight-bold); margin-top:8px;">Category Composition</h3>
+          <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Breakdown of Pune’s urban features across top lifestyle segments.</p>
+        </div>
+        <div id="category-bars-container" style="display:flex; flex-direction:column; gap:16px;">
+          <!-- Dynamically populated -->
+          <p style="color:var(--text-muted); font-size:14px;">Loading category distribution...</p>
+        </div>
+      </div>
+
+      <!-- WIDGET 2: Hotspot Density Table -->
+      <div class="insight-widget">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
+          <div>
+            <span class="badge badge--lime">Neighborhood Concentration</span>
+            <h3 style="font-size:1.4rem; font-weight:var(--weight-bold); margin-top:8px;">Hotspot Density</h3>
+            <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Spatial clustering by key Pune district.</p>
+          </div>
+          <select id="density-cat-select" style="padding:6px 12px; border:1px solid var(--border-default); border-radius:var(--r-md); background:var(--bg-surface-sunken); font-size:13px;">
+            <option value="all">All Spots</option>
+            <option value="coffee">Cafes & Coffee</option>
+            <option value="dining">Dining & Food</option>
+            <option value="nightlife">Nightlife</option>
+            <option value="nature">Parks & Nature</option>
+            <option value="shopping">Shopping</option>
+          </select>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="comparison-table" style="font-size:13px;">
+            <thead>
+              <tr>
+                <th>Neighborhood</th>
+                <th>Places Count</th>
+                <th>Density Tier</th>
+              </tr>
+            </thead>
+            <tbody id="density-table-rows">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- WIDGET 3: Accessibility Inspector (Full Width) -->
+      <div class="insight-widget insight-widget--full">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+          <div>
+            <span class="badge badge--aqua">Walking Distance Decay</span>
+            <h3 style="font-size:1.6rem; font-weight:var(--weight-bold); margin-top:8px;">Concentric Accessibility Buffers</h3>
+            <p style="font-size:14px; color:var(--text-secondary); margin-top:4px;">PostGIS ST_DWithin buffering around Pune neighborhoods (5 km/h average pedestrian velocity).</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label for="accessibility-preset-select" style="font-size:13px; font-weight:var(--weight-bold); color:var(--text-secondary);">Center:</label>
+            <select id="accessibility-preset-select" style="padding:8px 14px; border:1.5px solid var(--border-default); border-radius:var(--r-md); background:var(--bg-surface); font-size:14px; font-weight:var(--weight-semibold);">
+              <option value="default">Shivajinagar (Pune Central)</option>
+              <option value="koregaon">Koregaon Park</option>
+              <option value="fcroad">FC Road / Deccan</option>
+              <option value="viman_nagar">Viman Nagar</option>
+              <option value="kothrud">Kothrud</option>
+              <option value="hinjewadi">Hinjewadi</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-top:8px;" id="accessibility-cards-grid">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Interactive Mini Overview Map -->
+        <div style="margin-top:16px;">
+          <h4 style="font-size:var(--text-sm); font-weight:var(--weight-bold); color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Reference Buffer Map</h4>
+          <div id="mini-map" style="width:100%; height:320px; border-radius:var(--r-xl); overflow:hidden; border:1px solid var(--border-default);"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ═══ SHARED SITE FOOTER ═══ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__bottom">
+        <div>© 2026 <strong>VibePune</strong>. Academic WebGIS Project for Pune, Maharashtra.</div>
+        <div class="site-footer__attribution">Data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop">
+    <div class="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <div class="site-brand">
+          <div class="site-brand__icon">⚡</div>
+          <div class="site-brand__text-group">
+            <span class="site-brand__title">Vibe<span>Pune</span></span>
+          </div>
+        </div>
+        <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation">✕</button>
+      </div>
+
+      <nav class="mobile-nav-links">
+        <a href="index.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🏠</span><span>Home</span></a>
+        <a href="discover.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🗺️</span><span>Discover Map</span></a>
+        <a href="vibe.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">✨</span><span>Find Your Vibe</span></a>
+        <a href="events.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">🎟️</span><span>Pune Events</span></a>
+        <a href="insights.html" class="mobile-nav-link is-active"><span class="mobile-nav-link__icon">📊</span><span>Spatial Insights</span></a>
+        <a href="saved.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">❤️</span><span>Saved Places</span></a>
+        <a href="about.html" class="mobile-nav-link"><span class="mobile-nav-link__icon">📖</span><span>About & Vision</span></a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Leaflet & Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js?v=25"></script>
+  <script src="js/api.js?v=25"></script>
+  <script src="js/nav.js?v=25"></script>
+  <script src="js/insights-page.js?v=25"></script>
+</body>
+</html>
