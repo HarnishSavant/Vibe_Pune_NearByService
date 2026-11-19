@@ -50,8 +50,9 @@ const VibePuneMap = (() => {
   const OSM_HOT        = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
   const OSM_HOT_ATTR   = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors, Tiles &copy; <a href="https://www.hotosm.org/" target="_blank">HOT</a>';
 
-  // Dark Mode: CartoDB Dark Matter (High detail road and building network, supports zoom up to 20 without missing tile errors)
-  const CARTO_DARK     = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+  // Dark Mode: CartoDB Dark Matter with verified API key (no watermarks, full zoom 20)
+  const CARTO_KEY      = 'cb1_3xju_3_2f7e4505a738f5a763a0c04e';
+  const CARTO_DARK     = `https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`;
   const CARTO_DARK_ATTR= '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a>';
 
   // Fallback Esri Dark (max native zoom 16)

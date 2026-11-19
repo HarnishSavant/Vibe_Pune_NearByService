@@ -171,8 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const cartoKey = 'cb1_3xju_3_2f7e4505a738f5a763a0c04e';
     const tileUrl = isDark
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      ? `https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png?key=${cartoKey}`
       : 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
     const tileAttr = isDark
       ? '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors, &copy; CARTO'
