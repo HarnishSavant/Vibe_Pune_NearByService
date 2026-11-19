@@ -31,15 +31,15 @@ jobs:
 
       - name: Verify Static Geodata & PMTiles
         run: |
-          echo "Verifying static frontend distribution..."
-          ls -la frontend/
-          ls -la frontend/data/
-          echo "Static vector PMTiles size: $(ls -lh frontend/data/vibepune.pmtiles | awk '{print $5}')"
+          echo "Verifying static client distribution..."
+          ls -la client/
+          ls -la client/data/
+          echo "Static vector PMTiles size: $(ls -lh client/data/vibepune.pmtiles | awk '{print $5}')"
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'frontend'
+          path: 'client'
 
       - name: Deploy to GitHub Pages
         id: deployment
